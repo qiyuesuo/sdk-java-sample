@@ -22,6 +22,7 @@ import com.qiyuesuo.sdk.SDKClient;
 import com.qiyuesuo.sdk.api.RemoteSignService;
 import com.qiyuesuo.sdk.api.SealService;
 import com.qiyuesuo.sdk.api.Stamper;
+import com.qiyuesuo.sdk.contract.Contract;
 import com.qiyuesuo.sdk.impl.RemoteSignServiceImpl;
 import com.qiyuesuo.sdk.impl.SealServiceImpl;
 import com.qiyuesuo.sdk.signer.Company;
@@ -51,7 +52,7 @@ public class RemoteSignSample {
 
 		// ====================================================
 		// 根据文件创建合同
-		InputStream fileInput = new FileInputStream(new File("D://authorization.pdf"));
+		InputStream fileInput = new FileInputStream(new File("D://NoSign.pdf"));
 		Long fileDocument = remoteSignService.create(fileInput, "远程签授权协议书");
 		safeClose(fileInput);
 		logger.info("合同创建完成,文档ID:{}", fileDocument);
@@ -69,8 +70,8 @@ public class RemoteSignSample {
 
 		// ================================================
 		// 平台签署,带签名外观
-		Long documentId = 2272254595776380928L;// 创建合同接口返回的文档ID
-		Long sealId = 2233131913961275392L;// 平台印章
+		Long documentId = 2278885262404616192l;// 创建合同接口返回的文档ID
+		Long sealId = 2201194154317316096l;// 平台印章
 		Stamper stamper = new Stamper(1, 0.1f, 0.1f);// 签名位置
 		// remoteSignService.sign(documentId);//无签名外观
 		remoteSignService.sign(documentId, sealId, stamper);
@@ -97,7 +98,7 @@ public class RemoteSignSample {
 		Company company = new Company("大唐测试科技有限公司");
 		company.setRegisterNo("12323432452");
 		// 公司无签名外观时调用
-		// remoteSignService.sign(documentId, company);
+		//remoteSignService.sign(2278885262404616192l, company);
 		Stamper companyStamper = new Stamper(1, 0.3f, 0.3f);
 		String companySealData = sealService.generateSeal(company);
 		remoteSignService.sign(documentId, company, companySealData, companyStamper);
@@ -114,13 +115,46 @@ public class RemoteSignSample {
 		remoteSignService.download(documentId, outputStream);
 		safeClose(outputStream);
 		logger.info("下载完成。");
+	
+		// ==============================================
+		// 2.0.0版本新增功能
+		//获取合同详情
+		Contract contract = remoteSignService.acquireDetail(documentId);
+		logger.info("获取远程签详情完成：{}",contract.getStatus());
+
+		// ==============================================
+		// 签署完成
+		remoteSignService.complete(documentId);
+		logger.info("签署完成。");
+
+		// ==============================================
+		// 个人用户签署页面URL
+		Person signer = new Person("丁五");
+		person.setIdcard("311312195709206418");
+		person.setPaperType(PaperType.IDCARD);
+		person.setMobile("18601556688");
+		String personSignUrl = remoteSignService.signUrl(documentId, signer, true, companySealData, companyStamper, "https://www.baidu.com/", null);
+		logger.info("个人用户签署页面url：{}",personSignUrl);
+		
+		// ==============================================
+		// 企业用户签署页面URL
+		Company companySigner = new Company("大唐测试科技有限公司");
+		company.setRegisterNo("12323432452");
+		String companySignUrl = remoteSignService.signUrl(documentId, companySigner, true, sealData, companyStamper, "https://www.baidu.com/", null);
+		logger.info("企业用户签署页面url：{}",companySignUrl);
+		
+		// ==============================================
+		// 浏览合同URL
+		String viewUrl = remoteSignService.viewUrl(documentId);
+		logger.info("浏览合同URL：{}",viewUrl);
+		
 	}
 
 	@Bean
 	public SDKClient sdkClient() {
 		String url = "http://openapi.qiyuesuo.net";
-		String accessKey = "JkrJ3zZWO0";
-		String accessSecret = "t6ZZDEq7s2bMvX3h1HPR91UuS4g4U5";
+		String accessKey = "VLd3gWPAA6";
+		String accessSecret = "XDKr9cpVuaeieERaUl8GempbLYaFCK";
 		return new SDKClient(url, accessKey, accessSecret);
 	}
 
