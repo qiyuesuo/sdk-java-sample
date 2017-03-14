@@ -74,6 +74,7 @@ public class StandardSignSample {
 		//合同分类ID
 		request.setCategoryId(null); 
 		documentid = standardSignService.create(request);
+		safeClose(inputStream);
 		logger.info("标准签创建文件合同完成，生成文件id:{}",documentid);
 		
 		
@@ -87,7 +88,9 @@ public class StandardSignSample {
 		//receiver事例同上面的根据文件创建合同的receiver一致
 		tempRequest.addReceiver(receiver);
 		tempRequest.setDocName("员工合同文档");
-		tempRequest.setExpireTime(c.getTime());
+		Calendar ca = Calendar.getInstance();
+		ca.add(Calendar.MONTH, 1);
+		tempRequest.setExpireTime(ca.getTime());
 		tempRequest.setSubject("员工合同主题");
 		tempRequest.setCategoryId(2278742364627402752L);
 		documentid = standardSignService.create(request);
