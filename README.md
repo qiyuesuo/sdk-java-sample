@@ -49,6 +49,11 @@ Usage
 
 详情请参考： [RemoteSignSample.java](https://github.com/qiyuesuo/sdk-java-sample/blob/master/src/main/java/com/qiyuesuo/sdk/sample/RemoteSignSample.java).
 
+#### 标准签
+发起方通过接口发起合同签署合同，接收方登录契约锁云平台进行签署。
+
+详情请参考： [StandardSignSample.java](https://github.com/qiyuesuo/sdk-java-sample/blob/master/src/main/java/com/qiyuesuo/sdk/sample/StandardSignSample.java).
+
 Notes
 =======
 示例代码中的参数均为测试环境参数，实际运行时需要将相关参数修改为生产环境参数，或沙箱测试环境参数。
