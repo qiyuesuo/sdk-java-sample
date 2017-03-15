@@ -105,11 +105,6 @@ public class RemoteSignSample {
 		logger.info("公司签署完成。");
 
 		// ==============================================
-		// 签署完成
-		remoteSignService.complete(documentId);
-		logger.info("签署完成。");
-
-		// ==============================================
 		// 下载合同文件
 		OutputStream outputStream = new FileOutputStream(new File("D://remote-download.pdf"));
 		remoteSignService.download(documentId, outputStream);
@@ -119,29 +114,47 @@ public class RemoteSignSample {
 		// ==============================================
 		// 2.0.0版本新增功能
 		//获取合同详情
-		Contract contract = remoteSignService.acquireDetail(documentId);
+		Contract contract = remoteSignService.detail(documentId);
 		logger.info("获取远程签详情完成：{}",contract.getStatus());
 
+		
 		// ==============================================
 		// 签署完成
 		remoteSignService.complete(documentId);
 		logger.info("签署完成。");
 
+		
 		// ==============================================
 		// 个人用户签署页面URL
 		Person signer = new Person("丁五");
-		person.setIdcard("311312195709206418");
-		person.setPaperType(PaperType.IDCARD);
-		person.setMobile("18601556688");
-		String personSignUrl = remoteSignService.signUrl(documentId, signer, true, companySealData, companyStamper, "https://www.baidu.com/", null);
-		logger.info("个人用户签署页面url：{}",personSignUrl);
+		signer.setIdcard("311312195709206418");
+		signer.setPaperType(PaperType.IDCARD);
+		signer.setMobile("18601556688");
+		//个人用户签署页面之不可见签名 
+		String personSignUnvisibleUrl = remoteSignService.signUrl(fileDocument, signer,  "https://www.baidu.com/");
+		logger.info("个人用户签署页面之不可见签名 url：{}",personSignUnvisibleUrl);
+		//个人用户签署页面之可见签名
+		// 生成个人印章数据，用户可自定义签名图片
+		String personSealData = sealService.generateSeal(signer);// 生成个人印章数据，用户可自定义签名图片
+		Stamper personSignUrlStamper = new Stamper(1, 0.2f, 0.2f);
+		String personSignVisibleUrl = remoteSignService.signUrl(fileDocument, signer,personSealData ,personSignUrlStamper, "https://www.baidu.com/");
+		logger.info("个人用户签署页面之可见签名 url：{}",personSignVisibleUrl);
+		
 		
 		// ==============================================
 		// 企业用户签署页面URL
 		Company companySigner = new Company("大唐测试科技有限公司");
-		company.setRegisterNo("12323432452");
-		String companySignUrl = remoteSignService.signUrl(documentId, companySigner, true, sealData, companyStamper, "https://www.baidu.com/", null);
-		logger.info("企业用户签署页面url：{}",companySignUrl);
+		companySigner.setRegisterNo("12323432452");
+		//企业用户签署页面之不可见签名 
+		String companySignUnvisibleUrl = remoteSignService.signUrl(documentId, companySigner, "https://www.baidu.com/");
+		logger.info("企业用户签署页面之不可见签名url：{}",companySignUnvisibleUrl);
+		//企业用户签署页面之可见签名 
+		// 生成企业印章数据，用户可自定义印章图片
+		String companySealDate = sealService.generateSeal(companySigner); 
+		Stamper companySignUrlStamper = new Stamper(1, 0.3f, 0.3f);
+		String companySignVisibleUrl = remoteSignService.signUrl(documentId, companySigner, companySealDate, companySignUrlStamper, "https://www.baidu.com/");
+		logger.info("企业用户签署页面之可见签名url：{}",companySignVisibleUrl);
+		
 		
 		// ==============================================
 		// 浏览合同URL
@@ -152,9 +165,9 @@ public class RemoteSignSample {
 
 	@Bean
 	public SDKClient sdkClient() {
-		String url = "http://openapi.qiyuesuo.net";
-		String accessKey = "VLd3gWPAA6";
-		String accessSecret = "XDKr9cpVuaeieERaUl8GempbLYaFCK";
+		String url = "https://openapi.qiyuesuo.me";
+		String accessKey = "tBYw1vOsA3";
+		String accessSecret = "NOUDnkX0JN96T1VGFttLVCaVWKe1Fh";
 		return new SDKClient(url, accessKey, accessSecret);
 	}
 

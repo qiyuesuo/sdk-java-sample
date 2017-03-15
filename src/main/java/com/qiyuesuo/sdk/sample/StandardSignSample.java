@@ -108,7 +108,7 @@ public class StandardSignSample {
 		
 		// ====================================================
 		// 获取合同详情
-		StandardContract contract = standardSignService.acquireDetail(documentid);
+		StandardContract contract = standardSignService.detail(documentid);
 		logger.info("根据文档id获取详情完成:{}", contract);
 		
 		
@@ -128,15 +128,6 @@ public class StandardSignSample {
 		safeClose(outputDoc);
 		logger.info("标准签合同下载完成");
 		
-		
-		//获取签署连接
-		String signUrl = standardSignService.signUrl(documentid, "http://www.baidu.com", null);
-		logger.info("签署链接：{}", signUrl);
-		
-		
-		//查看合同连接
-		String viewUrl = standardSignService.viewUrl(documentid);
-		logger.info("查看链接：{}", viewUrl);
 		
 	}
 	
