@@ -131,13 +131,13 @@ public class RemoteSignSample {
 		signer.setPaperType(PaperType.IDCARD);
 		signer.setMobile("18601556688");
 		//个人用户签署页面之不可见签名 
-		String personSignUnvisibleUrl = remoteSignService.signUrl(fileDocument, signer,  "https://www.baidu.com/");
+		String personSignUnvisibleUrl = remoteSignService.signUrl(documentId, signer,  "https://www.baidu.com/");
 		logger.info("个人用户签署页面之不可见签名 url：{}",personSignUnvisibleUrl);
 		//个人用户签署页面之可见签名
 		// 生成个人印章数据，用户可自定义签名图片
 		String personSealData = sealService.generateSeal(signer);// 生成个人印章数据，用户可自定义签名图片
 		Stamper personSignUrlStamper = new Stamper(1, 0.2f, 0.2f);
-		String personSignVisibleUrl = remoteSignService.signUrl(fileDocument, signer,personSealData ,personSignUrlStamper, "https://www.baidu.com/");
+		String personSignVisibleUrl = remoteSignService.signUrl(documentId, signer,personSealData ,personSignUrlStamper, "https://www.baidu.com/");
 		logger.info("个人用户签署页面之可见签名 url：{}",personSignVisibleUrl);
 		
 		

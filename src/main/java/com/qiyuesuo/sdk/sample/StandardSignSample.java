@@ -9,7 +9,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +29,6 @@ import com.qiyuesuo.sdk.impl.SealServiceImpl;
 import com.qiyuesuo.sdk.impl.StandardSignServiceImpl;
 import com.qiyuesuo.sdk.standard.AuthenticationLevel;
 import com.qiyuesuo.sdk.standard.Receiver;
-import com.qiyuesuo.sdk.standard.request.StandardCreateByFileRequest;
-import com.qiyuesuo.sdk.standard.request.StandardCreateByTemplateRequest;
 import com.qiyuesuo.sdk.standard.response.StandardContract;
 
 /**
@@ -62,40 +63,36 @@ public class StandardSignSample {
 		receiver.setMobile("12312312312");
 		receiver.setAgent("张三");
 		receiver.setType(Receiver.TYPE_COMPANY);
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.MONTH, 1);
-		
-		StandardCreateByFileRequest request = new StandardCreateByFileRequest();
-		request.setFile(inputStream);
-		request.addReceiver(receiver);
-		request.setDocName("员工合同文档");
-		request.setExpireTime(c.getTime());
-		request.setSubject("员工合同主题");
-		//合同分类ID
-		request.setCategoryId(null); 
-		documentid = standardSignService.create(request);
+
+		List<Receiver> receivers = new ArrayList<Receiver>();
+		receivers.add(receiver);
+		//使用默认合同分类创建合同
+		documentid = standardSignService.create(inputStream,receivers,"测试合同");
 		safeClose(inputStream);
-		logger.info("标准签创建文件合同完成，生成文件id:{}",documentid);
+		logger.info("标准签使用默认合同分类创建文件合同完成，生成文件id:{}",documentid);
+		//使用指定合同分类创建模版合同
+		//合同分类ID，需到契约锁云平台【分类管理】获取
+		Long categoryId = 2278742364627402752L;
+		documentid = standardSignService.create(inputStream,receivers,"测试分类管理合同",categoryId);
+		logger.info("标准签使用指定合同分类创建文件合同完成，生成文件id:{}",documentid);
 		
 		
 		// ====================================================
 		// 根据模版创建合同
-		StandardCreateByTemplateRequest tempRequest = new StandardCreateByTemplateRequest();
 		//模版id,可去契约锁平台【模版管理】板块获取
-		tempRequest.setTemplateId(2237141379182493696l); 
-		tempRequest.addTemplate("param1", "value1");
-		tempRequest.addTemplate("param2", "value2");
-		//receiver事例同上面的根据文件创建合同的receiver一致
-		tempRequest.addReceiver(receiver);
-		tempRequest.setDocName("员工合同文档");
-		Calendar ca = Calendar.getInstance();
-		ca.add(Calendar.MONTH, 1);
-		tempRequest.setExpireTime(ca.getTime());
-		tempRequest.setSubject("员工合同主题");
-		tempRequest.setCategoryId(2278742364627402752L);
-		documentid = standardSignService.create(request);
-		logger.info("标准签创建模版合同完成，生成文件id:{}",documentid);
-
+		Long templateId = 2274828609178828800L;
+		//模版参数
+		Map<String, String> templateParams = new HashMap<String, String>();
+		templateParams.put("param1", "value1");
+		templateParams.put("param2", "value2");
+		//使用默认合同分类创建模版合同
+		documentid = standardSignService.create(templateId,templateParams,receivers,"测试模版合同");
+		logger.info("标准签使用默认合同分类创建模版合同完成，生成文件id:{}",documentid);
+		//使用指定合同分类创建模版合同
+		//合同分类ID，需到契约锁云平台【分类管理】获取
+		Long tempCategoryId = 2279513616669474816l;
+		documentid = standardSignService.create(templateId,templateParams,receivers,"测试模版合同",tempCategoryId);
+		logger.info("标准签使用指定合同分类创建模版合同完成，生成文件id:{}",documentid);
 		
 		// ====================================================
 		// 合同签署
@@ -133,9 +130,9 @@ public class StandardSignSample {
 	
 	@Bean
 	public SDKClient sdkClient(){
-		String url = "http://openapi.qiyuesuo.net";
-		String accessKey = "VLd3gWPAA6";
-		String accessSecret = "XDKr9cpVuaeieERaUl8GempbLYaFCK";
+		String url = "https://openapi.qiyuesuo.me";
+		String accessKey = "tBYw1vOsA3";
+		String accessSecret = "NOUDnkX0JN96T1VGFttLVCaVWKe1Fh";
 		return new SDKClient(url,accessKey,accessSecret);
 	}
 	
