@@ -27,9 +27,9 @@ import com.qiyuesuo.sdk.api.Stamper;
 import com.qiyuesuo.sdk.api.StandardSignService;
 import com.qiyuesuo.sdk.impl.SealServiceImpl;
 import com.qiyuesuo.sdk.impl.StandardSignServiceImpl;
-import com.qiyuesuo.sdk.standard.AuthenticationLevel;
+import com.qiyuesuo.sdk.signer.AuthLevel;
 import com.qiyuesuo.sdk.standard.Receiver;
-import com.qiyuesuo.sdk.standard.response.StandardContract;
+import com.qiyuesuo.sdk.standard.StandardContract;
 
 /**
  * 
@@ -58,9 +58,9 @@ public class StandardSignSample {
 		InputStream inputStream = new FileInputStream(new File("D://NoSign.pdf"));
 		// 创建合同接收人信息
 		Receiver receiver = new Receiver();
-		receiver.setAuthLevel(AuthenticationLevel.BASIC);
-		receiver.setName("丁祥春");
-		receiver.setMobile("13262598398");
+		receiver.setAuthLevel(AuthLevel.BASIC);
+		receiver.setName("老丁");
+		receiver.setMobile("13262598888");
 		receiver.setType(Receiver.TYPE_PERSONAL);
 
 		List<Receiver> receivers = new ArrayList<Receiver>();
@@ -70,7 +70,7 @@ public class StandardSignSample {
 		logger.info("标准签使用默认合同分类创建文件合同完成，生成文件id:{}",documentid);
 		//使用指定合同分类创建模版合同
 		//合同分类ID，需到契约锁云平台【分类管理】获取
-		Long categoryId = 2279606378727211008l;
+		Long categoryId = 2279513616669474816l;
 		documentid = standardSignService.create(inputStream,receivers,"测试分类管理合同",categoryId);
 		logger.info("标准签使用指定合同分类创建文件合同完成，生成文件id:{}",documentid);
 		safeClose(inputStream);
@@ -79,7 +79,7 @@ public class StandardSignSample {
 		// ====================================================
 		// 根据模版创建合同
 		//模版id,可去契约锁平台【模版管理】板块获取
-		Long templateId = 2279616178114527232l;
+		Long templateId = 2279843423466815488l;
 		//模版参数
 		Map<String, String> templateParams = new HashMap<String, String>();
 		templateParams.put("name", "laoding");
@@ -89,7 +89,7 @@ public class StandardSignSample {
 		logger.info("标准签使用默认合同分类创建模版合同完成，生成文件id:{}",documentid);
 		//使用指定合同分类创建模版合同
 		//合同分类ID，需到契约锁云平台【分类管理】获取
-		Long tempCategoryId = 2279606378727211008l;
+		Long tempCategoryId = 2279513616669474816l;
 		documentid = standardSignService.create(templateId,templateParams,receivers,"测试模版合同",tempCategoryId);
 		logger.info("标准签使用指定合同分类创建模版合同完成，生成文件id:{}",documentid);
 	
@@ -98,7 +98,7 @@ public class StandardSignSample {
 		// 签署页码和位置
 		Stamper stamper = new Stamper(1, 0.5f, 0.5f);
 		//公章编号，需前往契约锁平台【公章管理】获取
-		Long sealId = 2277427366969999360l;
+		Long sealId = 2225933984527810560l;
 		standardSignService.sign(documentid, sealId, stamper);
 		logger.info("标准签合同签署完成");
 		
@@ -119,7 +119,7 @@ public class StandardSignSample {
 		// ====================================================
 		// 合同文件下（PDF）
 		FileOutputStream outputDoc = new FileOutputStream("D:/outputDoc.pdf");
-		standardSignService.downloadDoc(2279618755514335232l, outputDoc);
+		standardSignService.downloadDoc(documentid, outputDoc);
 		safeClose(outputDoc);
 		logger.info("标准签合同下载完成");
 		

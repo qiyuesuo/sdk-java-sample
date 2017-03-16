@@ -55,13 +55,13 @@ public class LocalSignSample {
 		
 		//========================================================================
 		//平台签署有外观签名
-		InputStream platformStamperInput = new FileInputStream(new File("D://authorization.pdf"));
+		InputStream platformStamperInput = new FileInputStream(new File("D://NoSign.pdf"));
 		OutputStream platformStamperOut = new FileOutputStream(new File("D://Local-platform-stamper.pdf"));
 		//指定签名页码和坐标，确定签名位置
 		//Stamper stamper = new Stamper(1, 0.1f, 0.1f);
 		//根据关键字确定签名位置，若找到多个关键字则只在第一个关键字出现的位置签署，若没有出现关键字则抛出异常
-		Stamper keywordStamper = new Stamper("盖公章", -0.1f, -0.1f);
-		Long sealId = 2233131913961275392L;//印章ID，在云平台维护
+		Stamper keywordStamper = new Stamper(1, 0.1f, 0.1f);
+		Long sealId = 2225933984527810560l;//印章ID，在云平台维护
 		localSignService.sign(platformStamperInput, platformStamperOut,sealId ,keywordStamper);
 		logger.info("平台签署带外观签名完成.");
 		
