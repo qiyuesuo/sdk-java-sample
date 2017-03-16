@@ -34,7 +34,6 @@ import com.qiyuesuo.sdk.template.Template;
  * 契约锁 JAVA SDK 远程签调用示例代码
  * 本示例代码仅展示了契约锁Java SDK用法，代码中的姓名、手机、邮箱均为非真实数据;</br>
  * 示例中的参数均为测试环境参数，实际运行时需要将相关参数修改为生产环境参数，或沙箱测试环境参数
- * 
  * @author Ricky
  */
 @SpringBootApplication
@@ -59,25 +58,24 @@ public class RemoteSignSample {
 
 		// ====================================================
 		// 根据模板创建合同
-		Template template = new Template(2267243393824325632L);// 创建模板对象
+		Template template = new Template(2279616178114527232l);// 创建模板对象
 		// 设置模板参数
-		template.addParameter("param1", "张三");
-		template.addParameter("param2", "13868598888");
-		template.addParameter("param3", "14000.00");
+		template.addParameter("name", "张三");
+		template.addParameter("age", "11");
 
 		Long templateDocument = remoteSignService.create(template, "远程签模板合同");
 		logger.info("模板合同创建完成，文档ID：{}", templateDocument);
 
 		// ================================================
 		// 平台签署,带签名外观
-		Long documentId = 2278885262404616192l;// 创建合同接口返回的文档ID
-		Long sealId = 2201194154317316096l;// 平台印章
+		Long documentId = 2279623303930839040l;// 创建合同接口返回的文档ID
+		Long sealId = 2277427366969999360l;// 平台印章
 		Stamper stamper = new Stamper(1, 0.1f, 0.1f);// 签名位置
 		// remoteSignService.sign(documentId);//无签名外观
 		remoteSignService.sign(documentId, sealId, stamper);
 		logger.info("平台签署完成。");
 
-		// ==================================================
+//		// ==================================================
 		// 个人用户签署
 		Person person = new Person("丁五");
 		person.setIdcard("311312195709206418");
@@ -107,7 +105,7 @@ public class RemoteSignSample {
 		// ==============================================
 		// 下载合同文件
 		OutputStream outputStream = new FileOutputStream(new File("D://remote-download.pdf"));
-		remoteSignService.download(documentId, outputStream);
+		remoteSignService.download(2279623303930839040l, outputStream);
 		safeClose(outputStream);
 		logger.info("下载完成。");
 	
@@ -124,9 +122,9 @@ public class RemoteSignSample {
 		logger.info("签署完成。");
 
 		
-		// ==============================================
-		// 个人用户签署页面URL
-		Person signer = new Person("丁五");
+		 //==============================================
+		 //个人用户签署页面URL
+		Person signer = new Person("丁六");
 		signer.setIdcard("311312195709206418");
 		signer.setPaperType(PaperType.IDCARD);
 		signer.setMobile("18601556688");
@@ -134,7 +132,7 @@ public class RemoteSignSample {
 		String personSignUnvisibleUrl = remoteSignService.signUrl(documentId, signer,  "https://www.baidu.com/");
 		logger.info("个人用户签署页面之不可见签名 url：{}",personSignUnvisibleUrl);
 		//个人用户签署页面之可见签名
-		// 生成个人印章数据，用户可自定义签名图片
+		//生成个人印章数据，用户可自定义签名图片
 		String personSealData = sealService.generateSeal(signer);// 生成个人印章数据，用户可自定义签名图片
 		Stamper personSignUrlStamper = new Stamper(1, 0.2f, 0.2f);
 		String personSignVisibleUrl = remoteSignService.signUrl(documentId, signer,personSealData ,personSignUrlStamper, "https://www.baidu.com/");
@@ -143,7 +141,7 @@ public class RemoteSignSample {
 		
 		// ==============================================
 		// 企业用户签署页面URL
-		Company companySigner = new Company("大唐测试科技有限公司");
+		Company companySigner = new Company("哈治理测试科技有限公司");
 		companySigner.setRegisterNo("12323432452");
 		//企业用户签署页面之不可见签名 
 		String companySignUnvisibleUrl = remoteSignService.signUrl(documentId, companySigner, "https://www.baidu.com/");
@@ -151,11 +149,11 @@ public class RemoteSignSample {
 		//企业用户签署页面之可见签名 
 		// 生成企业印章数据，用户可自定义印章图片
 		String companySealDate = sealService.generateSeal(companySigner); 
-		Stamper companySignUrlStamper = new Stamper(1, 0.3f, 0.3f);
+		Stamper companySignUrlStamper = new Stamper("11",0f,-0.5f);
 		String companySignVisibleUrl = remoteSignService.signUrl(documentId, companySigner, companySealDate, companySignUrlStamper, "https://www.baidu.com/");
 		logger.info("企业用户签署页面之可见签名url：{}",companySignVisibleUrl);
 		
-		
+	
 		// ==============================================
 		// 浏览合同URL
 		String viewUrl = remoteSignService.viewUrl(documentId);
@@ -165,9 +163,9 @@ public class RemoteSignSample {
 
 	@Bean
 	public SDKClient sdkClient() {
-		String url = "https://openapi.qiyuesuo.me";
-		String accessKey = "tBYw1vOsA3";
-		String accessSecret = "NOUDnkX0JN96T1VGFttLVCaVWKe1Fh";
+		String url = "http://openapi.qiyuesuo.net";
+		String accessKey = "JkrJ3zZWO0";
+		String accessSecret = "t6ZZDEq7s2bMvX3h1HPR91UuS4g4U5";
 		return new SDKClient(url, accessKey, accessSecret);
 	}
 
