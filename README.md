@@ -22,7 +22,7 @@ Installation
 <dependency>
 	<groupId>com.qiyuesuo.sdk</groupId>
 	<artifactId>sdk-java</artifactId>
-	<version>2.0.0</version>
+	<version>2.1.0</version>
 </dependency>
 <dependency>
 	<groupId>org.bouncycastle</groupId>
