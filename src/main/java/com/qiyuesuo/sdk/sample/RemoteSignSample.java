@@ -130,6 +130,7 @@ public class RemoteSignSample {
 		signer.setPaperType(PaperType.IDCARD);
 		signer.setMobile("18201559988");//SignType.SIGNWITHPIN时必填
 		//个人用户签署页面之不可见签名 
+		//SignType:SIGN（直接签署），SIGNWITHPIN（手机验证码签署）
 		String personSignUnvisibleUrl = remoteSignService.signUrl(documentId,SignType.SIGNWITHPIN, signer,  "https://www.baidu.com/");
 		logger.info("个人用户签署页面之不可见签名 url：{}",personSignUnvisibleUrl);
 		//个人用户签署页面之可见签名
