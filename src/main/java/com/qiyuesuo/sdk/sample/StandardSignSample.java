@@ -23,10 +23,10 @@ import org.springframework.context.annotation.Bean;
 
 import com.qiyuesuo.sdk.SDKClient;
 import com.qiyuesuo.sdk.api.SealService;
-import com.qiyuesuo.sdk.api.Stamper;
 import com.qiyuesuo.sdk.api.StandardSignService;
 import com.qiyuesuo.sdk.impl.SealServiceImpl;
 import com.qiyuesuo.sdk.impl.StandardSignServiceImpl;
+import com.qiyuesuo.sdk.sign.Stamper;
 import com.qiyuesuo.sdk.signer.AuthLevel;
 import com.qiyuesuo.sdk.standard.Receiver;
 import com.qiyuesuo.sdk.standard.StandardContract;
