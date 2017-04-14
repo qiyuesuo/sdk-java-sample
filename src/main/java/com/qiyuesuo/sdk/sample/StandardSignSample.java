@@ -52,7 +52,7 @@ public class StandardSignSample {
 		
 		StandardSignService standardSignService  = context.getBean(StandardSignService.class);
 		Long documentid = null;
-		
+		Long categoryId = 2232065308875554816l;//合同分类ID，需到契约锁云平台【分类管理】获取
 		// ====================================================
 		// 根据文件创建合同
 		InputStream inputStream = new FileInputStream(new File("D://NoSign.pdf"));
@@ -69,18 +69,15 @@ public class StandardSignSample {
 		documentid = standardSignService.create(inputStream,receivers,"测试API合同");
 		logger.info("标准签使用默认合同分类创建文件合同完成，生成文件id:{}",documentid);
 		//使用指定合同分类创建模版合同
-		//合同分类ID，需到契约锁云平台【分类管理】获取
-		Long categoryId = 2232065308875554816l;
 		inputStream = new FileInputStream(new File("D://NoSign.pdf"));
 		documentid = standardSignService.create(inputStream,receivers,"测试分类管理合同",categoryId);
 		logger.info("标准签使用指定合同分类创建文件合同完成，生成文件id:{}",documentid);
 		safeClose(inputStream);
 		
-		
 		// ====================================================
 		// 根据模版创建合同
 		//模版id,可去契约锁平台【模版管理】板块获取
-		Long templateId = 2280251653347082240l;
+		Long templateId = 2284249661201973248l;
 		//模版参数
 		Map<String, String> templateParams = new HashMap<String, String>();
 		templateParams.put("name", "laoding");
@@ -124,7 +121,15 @@ public class StandardSignSample {
 		safeClose(outputDoc);
 		logger.info("标准签合同下载完成");
 		
+		//=====================================================
+		//根据html使用默认合同分类创建模版合同
+		String html = "<html><body><p>title</p><p>在线第三方电子合同平台。企业及个人用户可通过本平台与签约方快速完成合同签署，安全、合法、有效。</p></body></html>";
+		documentid = standardSignService.create(html, receivers, "标准签之根据html创建合同");
+		logger.info("根据html使用默认合同分类创建模版合同完成,documentId:{}",documentid);
 		
+		//根据html使用指定合同分类创建模版合同
+		documentid = standardSignService.create(html, receivers, "标准签之根据html创建合同",categoryId);
+		logger.info("根据html使用默认合同分类创建模版合同完成,documentId:{}",documentid);
 	}
 	
 	@Bean
