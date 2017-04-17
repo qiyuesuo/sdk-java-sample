@@ -116,16 +116,14 @@ public class RemoteSignSample {
 		//获取合同详情
 		Contract contract = remoteSignService.detail(documentId);
 		logger.info("获取远程签详情完成：{}",contract.getStatus());
-
 		
 		// ==============================================
 		// 签署完成
 		remoteSignService.complete(documentId);
 		logger.info("签署完成。");
 
-		
-		 //==============================================
-		 //个人用户签署页面URL
+		//==============================================
+		//个人用户签署页面URL
 		Person signer = new Person("丁六");
 		signer.setIdcard("311312195709206418");
 		signer.setPaperType(PaperType.IDCARD);
@@ -165,19 +163,19 @@ public class RemoteSignSample {
 		String viewUrl = remoteSignService.viewUrl(documentId);
 		logger.info("浏览合同URL：{}",viewUrl);
 		
-		// =============================================
-		//add at 2017-04-06
+		
+		// ==============================================
 		//根据html创建合同,不带有效时间
 		String html = "<html><body><p>title</p><p>在线第三方电子合同平台。企业及个人用户可通过本平台与签约方快速完成合同签署，安全、合法、有效。</p></body></html>";
 		documentId = remoteSignService.create(html, "测试html创建合同");
 		logger.info("根据html创建合同 documentId：{}",documentId);
-		
 		//根据html创建合同,带有效时间
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.MONTH, 1);
 		documentId = remoteSignService.create(html, "测试html创建合同",calendar.getTime());
 		logger.info("根据html创建合同 documentId：{}",documentId);
 		
+		// =============================================
 		//获取签章列表
 		List<Seal> list =  sealService.sealList();
 		logger.info("获取签章列表,{}",list);
@@ -188,7 +186,6 @@ public class RemoteSignSample {
 		String url = "http://openapi.qiyuesuo.net";
 		String accessKey = "VLd3gWPAA6";
 		String accessSecret = "XDKr9cpVuaeieERaUl8GempbLYaFCK";
-		
 		return new SDKClient(url, accessKey, accessSecret);
 	}
 

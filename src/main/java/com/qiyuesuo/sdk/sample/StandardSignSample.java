@@ -126,7 +126,6 @@ public class StandardSignSample {
 		String html = "<html><body><p>title</p><p>在线第三方电子合同平台。企业及个人用户可通过本平台与签约方快速完成合同签署，安全、合法、有效。</p></body></html>";
 		documentid = standardSignService.create(html, receivers, "标准签之根据html创建合同");
 		logger.info("根据html使用默认合同分类创建模版合同完成,documentId:{}",documentid);
-		
 		//根据html使用指定合同分类创建模版合同
 		documentid = standardSignService.create(html, receivers, "标准签之根据html创建合同",categoryId);
 		logger.info("根据html使用默认合同分类创建模版合同完成,documentId:{}",documentid);
