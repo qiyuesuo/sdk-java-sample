@@ -28,8 +28,11 @@ import com.qiyuesuo.sdk.impl.SealServiceImpl;
 import com.qiyuesuo.sdk.impl.StandardSignServiceImpl;
 import com.qiyuesuo.sdk.sign.Stamper;
 import com.qiyuesuo.sdk.signer.AuthLevel;
+import com.qiyuesuo.sdk.standard.Category;
+import com.qiyuesuo.sdk.standard.ReceiveType;
 import com.qiyuesuo.sdk.standard.Receiver;
 import com.qiyuesuo.sdk.standard.StandardContract;
+import com.qiyuesuo.sdk.standard.UserType;
 
 /**
  * 
@@ -52,43 +55,51 @@ public class StandardSignSample {
 		
 		StandardSignService standardSignService  = context.getBean(StandardSignService.class);
 		Long documentid = null;
-		Long categoryId = 2232065308875554816l;//合同分类ID，需到契约锁云平台【分类管理】获取
+		Long categoryId = 2284939986421678080l;//合同分类ID，需到契约锁云平台【分类管理】获取
 		// ====================================================
 		// 根据文件创建合同
-		InputStream inputStream = new FileInputStream(new File("D://NoSign.pdf"));
+		InputStream inputStream = new FileInputStream(new File("D:/test/NoSign.pdf"));
 		// 创建合同接收人信息
+		// 平台方，需要平台方签署时用到
+		Receiver platformReceiver = new Receiver();
+		platformReceiver.setType(UserType.PLATFORM);
+		platformReceiver.setOrdinal(1);
+		// 签署方，其他需要签署的个人或公司
 		Receiver receiver = new Receiver();
 		receiver.setAuthLevel(AuthLevel.BASIC);
 		receiver.setName("老丁");
-		receiver.setMobile("134****1093");
-		receiver.setType(Receiver.TYPE_PERSONAL);
+		receiver.setMobile("13412341093");
+		receiver.setType(UserType.PERSONAL);
+		receiver.setOrdinal(1);
 
 		List<Receiver> receivers = new ArrayList<Receiver>();
+		receivers.add(platformReceiver);
 		receivers.add(receiver);
 		//使用默认合同分类创建合同
-		documentid = standardSignService.create(inputStream,receivers,"测试API合同");
+		//参数receiveType解释，ReceiveType.SEQ：顺序接收、顺序签署，ReceiveType.SIMUL：同时接收、无序签署
+		documentid = standardSignService.create(inputStream,"测试API合同",receivers,ReceiveType.SEQ);
 		logger.info("标准签使用默认合同分类创建文件合同完成，生成文件id:{}",documentid);
 		//使用指定合同分类创建模版合同
-		inputStream = new FileInputStream(new File("D://NoSign.pdf"));
-		documentid = standardSignService.create(inputStream,receivers,"测试分类管理合同",categoryId);
+		inputStream = new FileInputStream(new File("D:/test/NoSign.pdf"));
+		documentid = standardSignService.create(inputStream,"测试分类管理合同",categoryId,receivers,ReceiveType.SEQ);
 		logger.info("标准签使用指定合同分类创建文件合同完成，生成文件id:{}",documentid);
 		safeClose(inputStream);
 		
 		// ====================================================
 		// 根据模版创建合同
 		//模版id,可去契约锁平台【模版管理】板块获取
-		Long templateId = 2284249661201973248l;
+		Long templateId = 2291848536332750874l;
 		//模版参数
 		Map<String, String> templateParams = new HashMap<String, String>();
 		templateParams.put("name", "laoding");
 		templateParams.put("age", "11");
 		//使用默认合同分类创建模版合同
-		documentid = standardSignService.create(templateId,templateParams,receivers,"测试模版合同");
+		documentid = standardSignService.create(templateId,templateParams,"测试模版合同",receivers,ReceiveType.SEQ);
 		logger.info("标准签使用默认合同分类创建模版合同完成，生成文件id:{}",documentid);
 		//使用指定合同分类创建模版合同
 		//合同分类ID，需到契约锁云平台【分类管理】获取
-		Long tempCategoryId = 2232065308875554816l;
-		documentid = standardSignService.create(templateId,templateParams,receivers,"测试模版合同",tempCategoryId);
+		Long tempCategoryId = 2284939986421678080l;
+		documentid = standardSignService.create(templateId,templateParams,"测试模版合同",tempCategoryId,receivers,ReceiveType.SEQ);
 		logger.info("标准签使用指定合同分类创建模版合同完成，生成文件id:{}",documentid);
 	
 		// ====================================================
@@ -96,7 +107,7 @@ public class StandardSignSample {
 		// 签署页码和位置
 		Stamper stamper = new Stamper(1, 0.5f, 0.5f);
 		//公章编号，需前往契约锁平台【公章管理】获取
-		Long sealId = 2201194154317316096l;
+		Long sealId = 2249772556456296448l;
 		standardSignService.sign(documentid, sealId, stamper);
 		logger.info("标准签合同签署完成");
 		
@@ -108,7 +119,7 @@ public class StandardSignSample {
 		
 		// ====================================================
 		// 合同文件下载 （ZIP）
-		FileOutputStream outputZip = new FileOutputStream("D:/outputZip.zip");
+		FileOutputStream outputZip = new FileOutputStream("D:/test/outputZip.zip");
 		standardSignService.download(documentid, outputZip);
 		safeClose(outputZip);
 		logger.info("标准签合同下载完成");
@@ -116,7 +127,7 @@ public class StandardSignSample {
 		
 		// ====================================================
 		// 合同文件下（PDF）
-		FileOutputStream outputDoc = new FileOutputStream("D:/outputDoc.pdf");
+		FileOutputStream outputDoc = new FileOutputStream("D:/test/outputDoc.pdf");
 		standardSignService.downloadDoc(documentid, outputDoc);
 		safeClose(outputDoc);
 		logger.info("标准签合同下载完成");
@@ -124,18 +135,23 @@ public class StandardSignSample {
 		//=====================================================
 		//根据html使用默认合同分类创建模版合同
 		String html = "<html><body><p>title</p><p>在线第三方电子合同平台。企业及个人用户可通过本平台与签约方快速完成合同签署，安全、合法、有效。</p></body></html>";
-		documentid = standardSignService.create(html, receivers, "标准签之根据html创建合同");
+		documentid = standardSignService.create(html, "标准签之根据html创建合同", receivers, ReceiveType.SEQ);
 		logger.info("根据html使用默认合同分类创建模版合同完成,documentId:{}",documentid);
 		//根据html使用指定合同分类创建模版合同
-		documentid = standardSignService.create(html, receivers, "标准签之根据html创建合同",categoryId);
+		documentid = standardSignService.create(html, "标准签之根据html创建合同",categoryId, receivers, ReceiveType.SEQ);
 		logger.info("根据html使用默认合同分类创建模版合同完成,documentId:{}",documentid);
+		
+		//=====================================================
+		//查询合同分类
+		List<Category> categories = standardSignService.queryCategory();
+		logger.info("查询合同分类完成,合同分类数量:{}",categories.size());
 	}
 	
 	@Bean
 	public SDKClient sdkClient(){
 		String url = "http://openapi.qiyuesuo.net";
-		String accessKey = "VLd3gWPAA6";
-		String accessSecret = "XDKr9cpVuaeieERaUl8GempbLYaFCK";
+		String accessKey = "7EswyQzhBe";
+		String accessSecret = "lSTLQLZlnCGkdy6MiOhAzIvfbOYlpU";
 		return new SDKClient(url,accessKey,accessSecret);
 	}
 	

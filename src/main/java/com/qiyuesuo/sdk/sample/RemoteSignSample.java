@@ -28,7 +28,9 @@ import com.qiyuesuo.sdk.impl.RemoteSignServiceImpl;
 import com.qiyuesuo.sdk.impl.SealServiceImpl;
 import com.qiyuesuo.sdk.seal.Seal;
 import com.qiyuesuo.sdk.sign.SignType;
+import com.qiyuesuo.sdk.sign.SignUrlResponse;
 import com.qiyuesuo.sdk.sign.Stamper;
+import com.qiyuesuo.sdk.sign.ViewUrlResponse;
 import com.qiyuesuo.sdk.signer.Company;
 import com.qiyuesuo.sdk.signer.PaperType;
 import com.qiyuesuo.sdk.signer.Person;
@@ -55,14 +57,14 @@ public class RemoteSignSample {
 		Long documentId = 2279623303930839040l;// 创建合同接口返回的文档ID
 		// ====================================================
 		// 根据文件创建合同
-		InputStream fileInput = new FileInputStream(new File("D://NoSign.pdf"));
+		InputStream fileInput = new FileInputStream(new File("D:/test/NoSign.pdf"));
 		documentId = remoteSignService.create(fileInput, "远程签授权协议书");
 		safeClose(fileInput);
 		logger.info("合同创建完成,文档ID:{}", documentId);
 
 		// ====================================================
 		// 根据模板创建合同
-		Template template = new Template(2279843423466815488l);// 创建模板对象
+		Template template = new Template(2291848536332750874l);// 创建模板对象
 		// 设置模板参数
 		template.addParameter("name", "张三");
 		template.addParameter("age", "11");
@@ -72,7 +74,7 @@ public class RemoteSignSample {
 
 		// ================================================
 		// 平台签署,带签名外观
-		Long sealId = 2225933984527810560l;// 平台印章
+		Long sealId = 2249772556456296448l;// 平台印章
 		Stamper stamper = new Stamper(1, 0.1f, 0.1f);// 签名位置
 		// remoteSignService.sign(documentId);//无签名外观
 		remoteSignService.sign(documentId, sealId, stamper);
@@ -107,7 +109,7 @@ public class RemoteSignSample {
 
 		// ==============================================
 		// 下载合同文件
-		OutputStream outputStream = new FileOutputStream(new File("D://remote-download.pdf"));
+		OutputStream outputStream = new FileOutputStream(new File("D:/test/remote-download.pdf"));
 		remoteSignService.download(documentId, outputStream);
 		safeClose(outputStream);
 		logger.info("下载完成。");
@@ -116,53 +118,53 @@ public class RemoteSignSample {
 		//获取合同详情
 		Contract contract = remoteSignService.detail(documentId);
 		logger.info("获取远程签详情完成：{}",contract.getStatus());
-		
-		// ==============================================
-		// 签署完成
-		remoteSignService.complete(documentId);
-		logger.info("签署完成。");
 
 		//==============================================
 		//个人用户签署页面URL
 		Person signer = new Person("丁六");
 		signer.setIdcard("311312195709206418");
 		signer.setPaperType(PaperType.IDCARD);
-		signer.setMobile("134****1093");//SignType.SIGNWITHPIN时必填
+		signer.setMobile("13412341093");//SignType.SIGNWITHPIN时必填
 		//个人用户签署页面之不可见签名 
 		//SignType:SIGN（直接签署），SIGNWITHPIN（手机验证码签署）
-		String personSignUnvisibleUrl = remoteSignService.signUrl(documentId,SignType.SIGN, signer,  "https://www.baidu.com/");
-		logger.info("个人用户签署页面之不可见签名 url：{}",personSignUnvisibleUrl);
+		SignUrlResponse personSignUnvisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGN, signer,  "https://www.baidu.com/");
+		logger.info("个人用户签署页面之不可见签名 url：{}",personSignUnvisibleResponse.getSignUrl());
 		//个人用户签署页面之可见签名
 		//生成个人印章数据，用户可自定义签名图片
 		String personSealData = sealService.generateSeal(signer);// 生成个人印章数据，用户可自定义签名图片
 		Stamper personSignUrlStamper = null;
 		//Stamper personSignUrlStamper = new Stamper(1, 0.3F, 0.3F);
-		String personSignVisibleUrl = remoteSignService.signUrl(documentId,SignType.SIGN, signer,personSealData ,personSignUrlStamper, "https://www.baidu.com/");
-		logger.info("个人用户签署页面之可见签名 url：{}",personSignVisibleUrl);
+		SignUrlResponse personSignVisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGN, signer,personSealData ,personSignUrlStamper, "https://www.baidu.com/");
+		logger.info("个人用户签署页面之可见签名 url：{}",personSignVisibleResponse.getSignUrl());
 		
 		
 		// ==============================================
 		// 企业用户签署页面URL
 		Company companySigner = new Company("哈治理测试科技有限公司");
 		companySigner.setRegisterNo("12323432452");
-		companySigner.setTelephone("134****1093");//SignType.SIGNWITHPIN时必填
+		companySigner.setTelephone("13411111093");//SignType.SIGNWITHPIN时必填
 		//企业用户签署页面之不可见签名 
-		String companySignUnvisibleUrl = remoteSignService.signUrl(documentId, SignType.SIGNWITHPIN,companySigner, "https://www.baidu.com/");
-		logger.info("企业用户签署页面之不可见签名url：{}",companySignUnvisibleUrl);
+		SignUrlResponse companySignUnvisibleResponse = remoteSignService.signUrl(documentId, SignType.SIGNWITHPIN,companySigner, "https://www.baidu.com/");
+		logger.info("企业用户签署页面之不可见签名url：{}",companySignUnvisibleResponse.getSignUrl());
 		//企业用户签署页面之可见签名 
 		// 生成企业印章数据，用户可自定义印章图片
 		String companySealDate = sealService.generateSeal(companySigner); 
 		//Stamper companySignUrlStamper = null;
 		Stamper companySignUrlStamper = new Stamper(1, 0.3F, 0.3F);
-		String companySignVisibleUrl = remoteSignService.signUrl(documentId,SignType.SIGNWITHPIN ,companySigner, companySealDate, companySignUrlStamper, "https://www.baidu.com/");
-		logger.info("企业用户签署页面之可见签名url：{}",companySignVisibleUrl);
+		SignUrlResponse companySignVisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGNWITHPIN ,companySigner, companySealDate, companySignUrlStamper, "https://www.baidu.com/");
+		logger.info("企业用户签署页面之可见签名url：{}",companySignVisibleResponse.getSignUrl());
 		
 	
 		// ==============================================
 		// 浏览合同URL
-		String viewUrl = remoteSignService.viewUrl(documentId);
-		logger.info("浏览合同URL：{}",viewUrl);
+		ViewUrlResponse viewUrlResponse = remoteSignService.viewUrl(documentId);
+		logger.info("浏览合同URL：{}",viewUrlResponse.getViewUrl());
+
 		
+		// ==============================================
+		// 签署完成
+		remoteSignService.complete(documentId);
+		logger.info("签署完成。");
 		
 		// ==============================================
 		//根据html创建合同,不带有效时间
@@ -184,8 +186,8 @@ public class RemoteSignSample {
 	@Bean
 	public SDKClient sdkClient() {
 		String url = "http://openapi.qiyuesuo.net";
-		String accessKey = "VLd3gWPAA6";
-		String accessSecret = "XDKr9cpVuaeieERaUl8GempbLYaFCK";
+		String accessKey = "7EswyQzhBe";
+		String accessSecret = "lSTLQLZlnCGkdy6MiOhAzIvfbOYlpU";
 		return new SDKClient(url, accessKey, accessSecret);
 	}
 
