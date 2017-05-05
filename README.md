@@ -22,7 +22,7 @@ Installation
 <dependency>
 	<groupId>com.qiyuesuo.sdk</groupId>
 	<artifactId>sdk-java</artifactId>
-	<version>2.2.0</version>
+	<version>2.3.0</version>
 </dependency>
 <dependency>
 	<groupId>org.bouncycastle</groupId>
@@ -53,6 +53,11 @@ Usage
 发起方通过接口发起合同签署合同，接收方登录契约锁云平台进行签署。
 
 详情请参考： [StandardSignSample.java](https://github.com/qiyuesuo/sdk-java-sample/blob/master/src/main/java/com/qiyuesuo/sdk/sample/StandardSignSample.java).
+
+#### 模板接口
+查询合同模板信息。
+
+详情请参考： [TemplateSample.java](https://github.com/qiyuesuo/sdk-java-sample/blob/master/src/main/java/com/qiyuesuo/sdk/sample/TemplateSample.java).
 
 Notes
 =======
