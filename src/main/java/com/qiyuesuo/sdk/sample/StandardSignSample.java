@@ -70,7 +70,7 @@ public class StandardSignSample {
 		receiver.setName("老丁");
 		receiver.setMobile("13412341093");
 		receiver.setType(UserType.PERSONAL);
-		receiver.setOrdinal(1);
+		receiver.setOrdinal(2);
 
 		List<Receiver> receivers = new ArrayList<Receiver>();
 		receivers.add(platformReceiver);
