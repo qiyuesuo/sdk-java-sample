@@ -48,28 +48,30 @@ public class LocalSignSample {
 		
 		//========================================================================
 		//平台签署无外观签名
-		InputStream platformInput = new FileInputStream(new File("D://NoSign.pdf"));
-		OutputStream platformOut = new FileOutputStream(new File("D://Local-platform.pdf"));
+		InputStream platformInput = new FileInputStream(new File("D:/sign/local/NoSign.pdf"));
+		OutputStream platformOut = new FileOutputStream(new File("D:/sign/local/Local-platform.pdf"));
 		localSignService.sign(platformInput, platformOut);
 		logger.info("平台签署无外观签名完成.");
 		
 		//========================================================================
 		//平台签署有外观签名
-		InputStream platformStamperInput = new FileInputStream(new File("D://NoSign.pdf"));
-		OutputStream platformStamperOut = new FileOutputStream(new File("D://Local-platform-stamper.pdf"));
+		InputStream platformStamperInput = new FileInputStream(new File("D:/sign/local/NoSign.pdf"));
+		OutputStream platformStamperOut = new FileOutputStream(new File("D:/sign/local/Local-platform-stamper.pdf"));
 		//指定签名页码和坐标，确定签名位置
 		//Stamper stamper = new Stamper(1, 0.1f, 0.1f);
 		//根据关键字确定签名位置，若找到多个关键字则只在第一个关键字出现的位置签署，若没有出现关键字则抛出异常
-		Stamper keywordStamper = new Stamper(1, 0.1f, 0.1f);
-		Long sealId = 2201194154317316096l;//印章ID，在云平台维护
+		Stamper keywordStamper = new Stamper("乙方盖章", 0.01f, -0.01f);
+		//在找到的第keywordIndex个关键字上签署，keywordIndex默认为1。例：如果keywordIndex=1，则在第1个关键字上签署；如果keywordIndex=-1，则在倒数第1个关键字上签署；如果keywordIndex=0，则在所有关键字上签署。
+		keywordStamper.setKeywordIndex(-1);
+		Long sealId = 2249772556456296448l;//印章ID，在云平台维护
 		localSignService.sign(platformStamperInput, platformStamperOut,sealId ,keywordStamper);
 		logger.info("平台签署带外观签名完成.");
 		
 		
 		//========================================================================
 		//个人用户签署无外观签名
-		InputStream personInput = new FileInputStream(new File("D://NoSign.pdf"));
-		OutputStream personOut = new FileOutputStream(new File("D://Local-person.pdf"));
+		InputStream personInput = new FileInputStream(new File("D:/sign/local/NoSign.pdf"));
+		OutputStream personOut = new FileOutputStream(new File("D:/sign/local/Local-person.pdf"));
 		//实例化个人用户信息，姓名（name）必须, 身份信息（idcard）、邮箱（email）、电话（mobile）三者必备其一，用于颁发证书
 		Person person = new Person("张三");
 		person.setPaper(PaperType.IDCARD,"311312183706206418");
@@ -81,8 +83,8 @@ public class LocalSignSample {
 		
 		//========================================================================
 		//个人用户签署有外观签名
-		InputStream personStamperInput = new FileInputStream(new File("D://NoSign.pdf"));
-		OutputStream personStamperOut = new FileOutputStream(new File("D://Local-person-stamper.pdf"));
+		InputStream personStamperInput = new FileInputStream(new File("D:/sign/local/NoSign.pdf"));
+		OutputStream personStamperOut = new FileOutputStream(new File("D:/sign/local/Local-person-stamper.pdf"));
 		//创建个人印章
 		String sealData = sealService.generateSeal(person);
 		//Stamper personKeywordStamper = new Stamper("运营者签字", 0, 0);
@@ -92,8 +94,8 @@ public class LocalSignSample {
 		
 		//========================================================================
 		//公司用户签署无外观签名
-		InputStream companyInput = new FileInputStream(new File("D://NoSign.pdf"));
-		OutputStream companyOut = new FileOutputStream(new File("D://Local-company.pdf"));
+		InputStream companyInput = new FileInputStream(new File("D:/sign/local/NoSign.pdf"));
+		OutputStream companyOut = new FileOutputStream(new File("D:/sign/local/Local-company.pdf"));
 		//实例化公司用户信息，公司名称（name）必须, 工商注册号（社会统一信用代码）信息（registerNo）、邮箱（email）、电话（telephone）三者必备其一，用于颁发证书
 		Company company = new Company("大唐科技");
 		company.setTelephone("02150****88");
@@ -104,8 +106,8 @@ public class LocalSignSample {
 		
 		//========================================================================
 		//公司用户签署有外观签名
-		InputStream companyStamperInput = new FileInputStream(new File("D://NoSign.pdf"));
-		OutputStream companyStamperOut = new FileOutputStream(new File("D://Local-company-stamper.pdf"));
+		InputStream companyStamperInput = new FileInputStream(new File("D:/sign/local/NoSign.pdf"));
+		OutputStream companyStamperOut = new FileOutputStream(new File("D:/sign/local/Local-company-stamper.pdf"));
 		//创建个人印章
 		String companySealData = sealService.generateSeal(company);
 		//Stamper companyKeywordStamper = new Stamper("盖公章", 0, 0);//关键字
@@ -119,8 +121,8 @@ public class LocalSignSample {
 	@Bean
 	public SDKClient sdkClient(){
 		String url = "http://openapi.qiyuesuo.net";
-		String accessKey = "VLd3gWPAA6";
-		String accessSecret = "XDKr9cpVuaeieERaUl8GempbLYaFCK";
+		String accessKey = "7EswyQzhBe";
+		String accessSecret = "lSTLQLZlnCGkdy6MiOhAzIvfbOYlpU";
 		return new SDKClient(url,accessKey,accessSecret);
 	}
 	

@@ -58,7 +58,7 @@ public class StandardSignSample {
 		Long categoryId = 2284939986421678080l;//合同分类ID，需到契约锁云平台【分类管理】获取
 		// ====================================================
 		// 根据文件创建合同
-		InputStream inputStream = new FileInputStream(new File("D:/test/NoSign.pdf"));
+		InputStream inputStream = new FileInputStream(new File("D:/sign/standard/NoSign.pdf"));
 		// 创建合同接收人信息
 		// 平台方，需要平台方签署时用到
 		Receiver platformReceiver = new Receiver();
@@ -80,7 +80,7 @@ public class StandardSignSample {
 		documentid = standardSignService.create(inputStream,"测试API合同",receivers,ReceiveType.SEQ);
 		logger.info("标准签使用默认合同分类创建文件合同完成，生成文件id:{}",documentid);
 		//使用指定合同分类创建模版合同
-		inputStream = new FileInputStream(new File("D:/test/NoSign.pdf"));
+		inputStream = new FileInputStream(new File("D:/sign/standard/NoSign.pdf"));
 		documentid = standardSignService.create(inputStream,"测试分类管理合同",categoryId,receivers,ReceiveType.SEQ);
 		logger.info("标准签使用指定合同分类创建文件合同完成，生成文件id:{}",documentid);
 		safeClose(inputStream);
@@ -108,7 +108,10 @@ public class StandardSignSample {
 		Stamper stamper = new Stamper(1, 0.5f, 0.5f);
 		//公章编号，需前往契约锁平台【公章管理】获取
 		Long sealId = 2249772556456296448l;
-		standardSignService.sign(documentid, sealId, stamper);
+		// 附带骑缝章外观的签署
+		standardSignService.sign(documentid, sealId, stamper, true);
+		// 不附带骑缝章外观的签署
+//		standardSignService.sign(documentid, sealId, stamper, false);
 		logger.info("标准签合同签署完成");
 		
 		// ====================================================
@@ -119,7 +122,7 @@ public class StandardSignSample {
 		
 		// ====================================================
 		// 合同文件下载 （ZIP）
-		FileOutputStream outputZip = new FileOutputStream("D:/test/outputZip.zip");
+		FileOutputStream outputZip = new FileOutputStream("D:/sign/standard/outputZip.zip");
 		standardSignService.download(documentid, outputZip);
 		safeClose(outputZip);
 		logger.info("标准签合同下载完成");
@@ -127,7 +130,7 @@ public class StandardSignSample {
 		
 		// ====================================================
 		// 合同文件下（PDF）
-		FileOutputStream outputDoc = new FileOutputStream("D:/test/outputDoc.pdf");
+		FileOutputStream outputDoc = new FileOutputStream("D:/sign/standard/outputDoc.pdf");
 		standardSignService.downloadDoc(documentid, outputDoc);
 		safeClose(outputDoc);
 		logger.info("标准签合同下载完成");
