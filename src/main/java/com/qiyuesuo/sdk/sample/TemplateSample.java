@@ -40,7 +40,11 @@ public class TemplateSample {
 		// 查询合同模板
 		List<TemplateInfo> templateInfos = templateService.queryTemplate();
 		logger.info("查询合同模板完成,合同模板数量:{}",templateInfos.size());
-		
+
+		//========================================================================
+		// 查询合同模板详情
+		TemplateInfo templateInfo = templateService.queryDetail(2291848536332750874L);
+		logger.info("查询合同模板详情完成,模板名称:{}",templateInfo.getTitle());
 
 	}
 

@@ -75,9 +75,11 @@ public class RemoteSignSample {
 		// ================================================
 		// 平台签署,带签名外观
 		Long sealId = 2249772556456296448l;// 平台印章
-		Stamper stamper = new Stamper(1, 0.1f, 0.1f);// 签名位置
-		// remoteSignService.sign(documentId);//无签名外观
-		remoteSignService.sign(documentId, sealId, stamper);
+		// Stamper stamper = new Stamper(1, 0.1f, 0.1f);// 签名位置，直接确定印章坐标
+		Stamper stamper = new Stamper("乙方签名",0,-0.01f);// 签名位置，用关键字确定印章坐标
+		stamper.setKeywordIndex(-1); // 设置关键字索引，-1表示在找到的最后一个关键字处签名
+		remoteSignService.sign(documentId, sealId, stamper); // 有签名外观签署
+		// remoteSignService.sign(documentId);//无签名外观签署
 		logger.info("平台签署完成。");
 
 		// ==================================================
@@ -169,12 +171,12 @@ public class RemoteSignSample {
 		// ==============================================
 		//根据html创建合同,不带有效时间
 		String html = "<html><body><p>title</p><p>在线第三方电子合同平台。企业及个人用户可通过本平台与签约方快速完成合同签署，安全、合法、有效。</p></body></html>";
-		documentId = remoteSignService.create(html, "测试html创建合同");
+		documentId = remoteSignService.create(html, "测试html创建合同一");
 		logger.info("根据html创建合同 documentId：{}",documentId);
 		//根据html创建合同,带有效时间
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.MONTH, 1);
-		documentId = remoteSignService.create(html, "测试html创建合同",calendar.getTime());
+		documentId = remoteSignService.create(html, "测试html创建合同二",calendar.getTime());
 		logger.info("根据html创建合同 documentId：{}",documentId);
 		
 		// =============================================
