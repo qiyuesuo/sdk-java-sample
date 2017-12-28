@@ -187,7 +187,7 @@ public class RemoteSignSample {
 
 	@Bean
 	public SDKClient sdkClient() {
-		String url = "http://openapi.qiyuesuo.net";
+		String url = "https://openapi.qiyuesuo.me"; // 测试环境
 		String accessKey = "7EswyQzhBe";
 		String accessSecret = "lSTLQLZlnCGkdy6MiOhAzIvfbOYlpU";
 		return new SDKClient(url, accessKey, accessSecret);
