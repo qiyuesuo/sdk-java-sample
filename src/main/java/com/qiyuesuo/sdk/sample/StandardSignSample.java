@@ -54,9 +54,9 @@ public class StandardSignSample {
 	private static final Logger logger = LoggerFactory.getLogger(StandardSignSample.class);
 
 	private static StandardSignService standardSignService  = null;
-	private static Long contractId = null;
-	private static Long documentId1 = null;
-	private static Long documentId2 = null;
+	private static Long contractId = null; // 合同ID
+	private static Long documentId1 = null; // 第一个合同文件ID
+	private static Long documentId2 = null; // 第二个合同文件ID
 	private static Long categoryId = 2278742364627402752l;// 合同分类ID，在契约锁云平台【业务分类】获取
 	private static Long templateId = 2274828609178828800L; // 模板ID，在契约锁云平台【文件模板】中获取
 	private static Long sealId = 2287533979868536880L; // 印章编号，在契约锁云平台【公司印章】中获取
@@ -70,11 +70,11 @@ public class StandardSignSample {
 		
 		standardSignService  = context.getBean(StandardSignService.class);
 		// ====================================================
-		// 1、初始化合同：可以用文件初始化合同、用html文本初始化合同、用模板初始化合同
-		CreateContractResponse initResponse = create();
-		contractId = initResponse.getContractId();
-		documentId1 = initResponse.getDocumentId();
-		logger.info("初始化合同完成：contractId:{}, documentId1:{}", contractId, documentId1);
+		// 1、创建合同：可以用文件创建合同、用html文本创建合同、用模板创建合同
+		CreateContractResponse response = create();
+		contractId = response.getContractId();
+		documentId1 = response.getDocumentId();
+		logger.info("创建合同完成：contractId:{}, documentId1:{}", contractId, documentId1);
 		// ====================================================
 		// 2、添加合同文件：如果存在多份合同文件，可以调用此接口为合同添加文件
         documentId2 = addDocument();
@@ -134,22 +134,22 @@ public class StandardSignSample {
 		safeClose(inputStream);
 		
 //		// 用html文本创建合同
-//		InitByHtmlRequest request = new InitByHtmlRequest();
+//		CreateByHtmlRequest request = new CreateByHtmlRequest();
 //		request.setDocName("html_doc1");
 //		request.setSubject("标准签合同");
-//		request.setHtml("这是用HTML初始化合同的HTML文本");
-//		InitResponse response = standardSignService.init(request);
+//		request.setHtml("这是用HTML创建合同的HTML文本");
+//		CreateContractResponse response = standardSignService.create(request);
 		
 //		// 用模板创建合同
 //		Map<String, String> params = new HashMap<String, String>();
 //		params.put("param1", "value1");
 //		params.put("param2", "value2");
-//		InitByTemplateRequest request = new InitByTemplateRequest();
+//		CreateByTemplateRequest request = new CreateByTemplateRequest();
 //		request.setDocName("template_doc1");
 //		request.setSubject("标准签合同");
 //		request.setTemplateId(templateId);
 //		request.setTemplateParams(params);
-//		InitResponse response = standardSignService.init(request);
+//		CreateContractResponse response = standardSignService.create(request);
 		
 		return response;
 	}
@@ -174,7 +174,7 @@ public class StandardSignSample {
 //		AddDocumentByHtmlRequest request = new AddDocumentByHtmlRequest();
 //		request.setContractId(contractId);
 //		request.setTitle("html_doc2");
-//		request.setHtml("这是用HTML初始化合同的HTML文本");
+//		request.setHtml("这是用HTML添加合同文件的HTML文本");
 //		Long documentId = standardSignService.addDocument(request);
 
 //		// 用合同模板添加合同文件
@@ -188,7 +188,6 @@ public class StandardSignSample {
 //		request.setTitle("template_doc2");
 //		Long documentId = standardSignService.addDocument(request);
 
-		logger.info("documentId:{}", documentId);
 		return documentId;
 	}
 	
@@ -200,7 +199,7 @@ public class StandardSignSample {
 	 * 合同接收顺序: 分为“顺序接收”、“同时接收”两种，顺序接收时签署方按指定的顺序依次接收合同并签署，同时接收时签署方同时接收到合同且签署顺序不固定
 	 */
 	private static void send() {
-		// 合同接收方：可以是个人
+		// 合同接收方：运营方
 		Receiver receiver1 = new Receiver();
 		receiver1.setType(UserType.PLATFORM);
 		receiver1.setOrdinal(1);
@@ -233,7 +232,7 @@ public class StandardSignSample {
 
 		SendRequest request = new SendRequest();
 		request.setContractId(contractId);
-		request.setCategoryId(categoryId); // 为空时合同分类到“默认合同分类”下
+		request.setCategoryId(categoryId); // 为空时默认为“默认合同分类”
 		request.setReceiveType(ReceiveType.SEQ); // 顺序接收
 		request.setReceivers(receivers);
 		// 发起合同
@@ -294,7 +293,7 @@ public class StandardSignSample {
 		stamper1.setKeyword("甲方公章签署");
 		// 坐标指定时间戳位置
 		StandardStamper stamper2 = new StandardStamper();
-		stamper2.setDocumentId(documentId2);
+		stamper2.setDocumentId(documentId1);
 		stamper2.setType(StandardSignType.SEAL_TIMESTAMP);
 		stamper2.setPage(1);
 		stamper2.setOffsetX(0.1);
@@ -307,7 +306,7 @@ public class StandardSignSample {
 		request.setContractId(contractId);
 		request.setSealId(sealId); // 指定印章ID
 		request.setStampers(stampers);
-		request.setAcrossPage(true); // 选择是否签署骑缝章
+		request.setAcrossPage(true); // 指定是否签署骑缝章
 		
 		standardSignService.sign(request);
 	}
