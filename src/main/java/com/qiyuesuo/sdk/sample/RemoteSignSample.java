@@ -129,14 +129,14 @@ public class RemoteSignSample {
 		signer.setMobile("13412341093");//SignType.SIGNWITHPIN时必填
 		//个人用户签署页面之不可见签名 
 		//SignType:SIGN（直接签署），SIGNWITHPIN（手机验证码签署）
-		SignUrlResponse personSignUnvisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGN, signer,  "https://www.baidu.com/");
+		SignUrlResponse personSignUnvisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGN, signer,  "https://www.baidu.com/", null);
 		logger.info("个人用户签署页面之不可见签名 url：{}",personSignUnvisibleResponse.getSignUrl());
 		//个人用户签署页面之可见签名
 		//生成个人印章数据，用户可自定义签名图片
 		String personSealData = sealService.generateSeal(signer);// 生成个人印章数据，用户可自定义签名图片
 		Stamper personSignUrlStamper = null;
 		//Stamper personSignUrlStamper = new Stamper(1, 0.3F, 0.3F);
-		SignUrlResponse personSignVisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGN, signer,personSealData ,personSignUrlStamper, "https://www.baidu.com/");
+		SignUrlResponse personSignVisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGN, signer,personSealData ,personSignUrlStamper, "https://www.baidu.com/", null);
 		logger.info("个人用户签署页面之可见签名 url：{}",personSignVisibleResponse.getSignUrl());
 		
 		
@@ -146,14 +146,14 @@ public class RemoteSignSample {
 		companySigner.setRegisterNo("12323432452");
 		companySigner.setTelephone("13411111093");//SignType.SIGNWITHPIN时必填
 		//企业用户签署页面之不可见签名 
-		SignUrlResponse companySignUnvisibleResponse = remoteSignService.signUrl(documentId, SignType.SIGNWITHPIN,companySigner, "https://www.baidu.com/");
+		SignUrlResponse companySignUnvisibleResponse = remoteSignService.signUrl(documentId, SignType.SIGNWITHPIN,companySigner, "https://www.baidu.com/", null);
 		logger.info("企业用户签署页面之不可见签名url：{}",companySignUnvisibleResponse.getSignUrl());
 		//企业用户签署页面之可见签名 
 		// 生成企业印章数据，用户可自定义印章图片
 		String companySealDate = sealService.generateSeal(companySigner); 
 		//Stamper companySignUrlStamper = null;
 		Stamper companySignUrlStamper = new Stamper(1, 0.3F, 0.3F);
-		SignUrlResponse companySignVisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGNWITHPIN ,companySigner, companySealDate, companySignUrlStamper, "https://www.baidu.com/");
+		SignUrlResponse companySignVisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGNWITHPIN ,companySigner, companySealDate, companySignUrlStamper, "https://www.baidu.com/", null);
 		logger.info("企业用户签署页面之可见签名url：{}",companySignVisibleResponse.getSignUrl());
 		
 	
