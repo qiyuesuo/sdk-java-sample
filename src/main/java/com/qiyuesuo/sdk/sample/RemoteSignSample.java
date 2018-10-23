@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.amqp.RabbitProperties.Template;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
@@ -28,14 +29,12 @@ import com.qiyuesuo.sdk.impl.RemoteSignServiceImpl;
 import com.qiyuesuo.sdk.impl.SealServiceImpl;
 import com.qiyuesuo.sdk.seal.Seal;
 import com.qiyuesuo.sdk.sign.SignType;
-import com.qiyuesuo.sdk.sign.SignUrlRequest;
 import com.qiyuesuo.sdk.sign.SignUrlResponse;
 import com.qiyuesuo.sdk.sign.Stamper;
 import com.qiyuesuo.sdk.sign.ViewUrlResponse;
 import com.qiyuesuo.sdk.signer.Company;
 import com.qiyuesuo.sdk.signer.PaperType;
 import com.qiyuesuo.sdk.signer.Person;
-import com.qiyuesuo.sdk.template.Template;
 
 /**
  * 契约锁 JAVA SDK 远程签调用示例代码
@@ -123,33 +122,41 @@ public class RemoteSignSample {
 		logger.info("获取远程签详情完成：{}",contract.getStatus());
 
 		//==============================================
-		// 用户签署页面URL
-		// 个人用户
+		//个人用户签署页面URL
 		Person signer = new Person("丁六");
 		signer.setIdcard("311312195709206418");
 		signer.setPaperType(PaperType.IDCARD);
 		signer.setMobile("13412341093");//SignType.SIGNWITHPIN时必填
-//		// 企业用户
-//		Company signer = new Company("哈治理测试科技有限公司");
-//		companySigner.setRegisterNo("12323432452");
-//		companySigner.setTelephone("13411111093");//SignType.SIGNWITHPIN时必填
-		sealData = sealService.generateSeal(signer);
-		stamper = new Stamper(1, 0.3F, 0.3F);
-		Stamper stamper2 = new Stamper(1, 0.5F, 0.3F);
-		// 请求参数
-		SignUrlRequest request = new SignUrlRequest();
-		request.setDocumentId(documentId); // 必填，合同文件ID
-		request.setSignType(SignType.SIGN);	// 必填，签署类型；SignType:SIGN（直接签署），SIGNWITHPIN（手机验证码签署）
-		request.setSigner(signer); // 必填，签署人
-		request.setSuccessUrl("https://www.baidu.com/"); // 必填，签署成功跳转链接
-		request.setSealData(sealData); // 非必填，印章数据
-		request.addStamper(stamper); // 非必填，签署位置
-		request.addStamper(stamper2); // 非必填，签署位置
-		request.setCallbackUrl("https://www.baidu.com?documentId=1234567890"); // 非必填，签署成功后回调地址
+		//个人用户签署页面之不可见签名 
+		//SignType:SIGN（直接签署），SIGNWITHPIN（手机验证码签署）
+		SignUrlResponse personSignUnvisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGN, signer,  "https://www.baidu.com/", null);
+		logger.info("个人用户签署页面之不可见签名 url：{}",personSignUnvisibleResponse.getSignUrl());
+		//个人用户签署页面之可见签名
+		//生成个人印章数据，用户可自定义签名图片
+		String personSealData = sealService.generateSeal(signer);// 生成个人印章数据，用户可自定义签名图片
+		Stamper personSignUrlStamper = null;
+		//Stamper personSignUrlStamper = new Stamper(1, 0.3F, 0.3F);
+		SignUrlResponse personSignVisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGN, signer,personSealData ,personSignUrlStamper, "https://www.baidu.com/", null);
+		logger.info("个人用户签署页面之可见签名 url：{}",personSignVisibleResponse.getSignUrl());
 		
-		SignUrlResponse response = remoteSignService.signUrl(request);
-		logger.info("用户签署页面url：{}",response.getSignUrl());
 		
+		// ==============================================
+		// 企业用户签署页面URL
+		Company companySigner = new Company("哈治理测试科技有限公司");
+		companySigner.setRegisterNo("12323432452");
+		companySigner.setTelephone("13411111093");//SignType.SIGNWITHPIN时必填
+		//企业用户签署页面之不可见签名 
+		SignUrlResponse companySignUnvisibleResponse = remoteSignService.signUrl(documentId, SignType.SIGNWITHPIN,companySigner, "https://www.baidu.com/", null);
+		logger.info("企业用户签署页面之不可见签名url：{}",companySignUnvisibleResponse.getSignUrl());
+		//企业用户签署页面之可见签名 
+		// 生成企业印章数据，用户可自定义印章图片
+		String companySealDate = sealService.generateSeal(companySigner); 
+		//Stamper companySignUrlStamper = null;
+		Stamper companySignUrlStamper = new Stamper(1, 0.3F, 0.3F);
+		SignUrlResponse companySignVisibleResponse = remoteSignService.signUrl(documentId,SignType.SIGNWITHPIN ,companySigner, companySealDate, companySignUrlStamper, "https://www.baidu.com/", null);
+		logger.info("企业用户签署页面之可见签名url：{}",companySignVisibleResponse.getSignUrl());
+		
+	
 		// ==============================================
 		// 浏览合同URL
 		ViewUrlResponse viewUrlResponse = remoteSignService.viewUrl(documentId);
