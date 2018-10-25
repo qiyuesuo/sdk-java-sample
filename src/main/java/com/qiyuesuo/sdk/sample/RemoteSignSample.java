@@ -127,7 +127,7 @@ public class RemoteSignSample {
 		Company company = new Company("大唐测试科技有限公司");
 		company.setRegisterNo("12323432452");
 		// 公司无签名外观时调用
-		//remoteSignService.sign(2278885262404616192l, company);
+//		remoteSignService.sign(documentId, company);
 		Stamper companyStamper = new Stamper(1, 0.3f, 0.3f);
 		String companySealData = sealService.generateSeal(company);
 		remoteSignService.sign(documentId, company, companySealData, companyStamper);

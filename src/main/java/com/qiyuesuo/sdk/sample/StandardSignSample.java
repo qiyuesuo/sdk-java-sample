@@ -259,7 +259,6 @@ public class StandardSignSample {
 		StandardStamper stamper2 = new StandardStamper();
 		stamper2.setDocumentId(documentId2); // 指定第二份文件的文件ID
 		stamper2.setType(StandardSignType.SEAL);
-//		stamper2.setKeyword("乙方公章签署");//使用关键字指定位置
 		stamper2.setOffsetX(0.2);
 		stamper2.setOffsetY(0.2);
 		stamper2.setPage(1);
