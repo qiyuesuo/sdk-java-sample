@@ -59,6 +59,27 @@ Usage
 
 详情请参考： [TemplateSample.java](https://github.com/qiyuesuo/sdk-java-sample/blob/master/src/main/java/com/qiyuesuo/sdk/sample/TemplateSample.java).
 
+#### 印章接口
+根据个人信息，自动为用户创建个人签章，并将印章数据以Base64编码的形式进行返回。
+
+详情请参考： [SealSample.java](https://github.com/qiyuesuo/sdk-java-sample/blob/master/src/main/java/com/qiyuesuo/sdk/sample/SealSample.java).
+
+#### 个人认证接口
+根据平台的身份信息和契约锁服务器的地址，对个人认证接口实现类进行初始化。
+
+详情请参考： [PersonalAuthSample.java](https://github.com/qiyuesuo/sdk-java-sample/blob/master/src/main/java/com/qiyuesuo/sdk/sample/PersonalAuthSample.java).
+
+#### 企业认证接口
+申请企业初级认证，返回认证ID，用于查询认证状态。
+
+详情请参考： [CompanyAuthSample.java](https://github.com/qiyuesuo/sdk-java-sample/blob/master/src/main/java/com/qiyuesuo/sdk/sample/CompanyAuthSample.java).
+
+#### 文件存证接口
+存储文件并公证。
+
+详情请参考： [StorageSample.java](https://github.com/qiyuesuo/sdk-java-sample/blob/master/src/main/java/com/qiyuesuo/sdk/sample/StorageSample.java).
+
+
 Notes
 =======
 示例代码中的参数均为测试环境参数，实际运行时需要将相关参数修改为生产环境参数，或沙箱测试环境参数。

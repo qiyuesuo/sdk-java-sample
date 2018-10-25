@@ -10,8 +10,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +30,7 @@ import com.qiyuesuo.sdk.api.StandardSignService;
 import com.qiyuesuo.sdk.impl.SealServiceImpl;
 import com.qiyuesuo.sdk.impl.StandardSignServiceImpl;
 import com.qiyuesuo.sdk.signer.AuthLevel;
-import com.qiyuesuo.sdk.standard.AddDocumentByFileRequest;
+import com.qiyuesuo.sdk.standard.AddDocumentByTemplateRequest;
 import com.qiyuesuo.sdk.standard.Category;
 import com.qiyuesuo.sdk.standard.CreateByFileRequest;
 import com.qiyuesuo.sdk.standard.CreateContractResponse;
@@ -36,16 +40,18 @@ import com.qiyuesuo.sdk.standard.SendRequest;
 import com.qiyuesuo.sdk.standard.SignByLegalPersonRequest;
 import com.qiyuesuo.sdk.standard.SignRequest;
 import com.qiyuesuo.sdk.standard.StandardContract;
+import com.qiyuesuo.sdk.standard.StandardSignStamper;
 import com.qiyuesuo.sdk.standard.StandardSignType;
 import com.qiyuesuo.sdk.standard.StandardStamper;
 import com.qiyuesuo.sdk.standard.UserType;
+import com.qiyuesuo.sdk.utils.JsonUtils;
 
 /**
  * 
  * 契约锁 JAVA SDK 标准签实例代码</br>
  * 本示例代码仅展示了如何使用契约锁java sdk，代码中的姓名、手机、邮箱均为虚拟数据;</br>
  * 示例中的参数均为测试环境参数，实际运行时需要将相关参数修改为生产环境参数，或沙箱测试环境参数;</br>
- * @author wise
+ * @author GJ
  * 
  */
 @SpringBootApplication
@@ -57,9 +63,17 @@ public class StandardSignSample {
 	private static Long contractId = null; // 合同ID
 	private static Long documentId1 = null; // 第一个合同文件ID
 	private static Long documentId2 = null; // 第二个合同文件ID
-	private static Long categoryId = 2278742364627402752l;// 合同分类ID，在契约锁云平台【业务分类】获取
-	private static Long templateId = 2274828609178828800L; // 模板ID，在契约锁云平台【文件模板】中获取
-	private static Long sealId = 2287533979868536880L; // 印章编号，在契约锁云平台【公司印章】中获取
+	private static Long categoryId = 2492523400566309714L;// 合同分类ID，在契约锁云平台【业务分类】获取
+	private static Long templateId = 2492523083753751371L; // 模板ID，在契约锁云平台【文件模板】中获取
+	private static Long sealId = 2492283309478498330L; // 印章编号，在契约锁云平台【公司印章】中获取
+	
+	private static File pdfFile = new File("./NoSign.pdf"); //测试文档
+	private static File outFile = new File("./sign/standard");   //测试输出文档路径
+	static {
+		if(!outFile.exists()) {
+			outFile.mkdirs();
+		}
+	}
 
 	
 	public static void main(String[] args) throws Exception {
@@ -95,11 +109,11 @@ public class StandardSignSample {
 		// ====================================================
 		// 获取合同详情
 		StandardContract contract = standardSignService.detail(contractId);
-		logger.info("根据文档id获取详情完成:{}", contract);
+		logger.info("根据文档id获取详情完成:{}", JsonUtils.toJson(contract));
 		
 		// ====================================================
 		// 合同文件下载 （ZIP）
-		FileOutputStream outputZip = new FileOutputStream("D:/sign/standard/outputZip.zip");
+		FileOutputStream outputZip = new FileOutputStream(new File(outFile,"outputZip.zip"));
 		standardSignService.download(contractId, outputZip);
 		safeClose(outputZip);
 		logger.info("标准签合同下载完成");
@@ -107,7 +121,7 @@ public class StandardSignSample {
 		
 		// ====================================================
 		// 合同文件下（PDF）
-		FileOutputStream outputDoc = new FileOutputStream("D:/sign/standard/outputDoc.pdf");
+		FileOutputStream outputDoc = new FileOutputStream(new File(outFile,"outputDoc.pdf"));
 		standardSignService.downloadDoc(documentId1, outputDoc);
 		safeClose(outputDoc);
 		logger.info("标准签合同下载完成");
@@ -115,7 +129,31 @@ public class StandardSignSample {
 		//=====================================================
 		//查询合同分类
 		List<Category> categories = standardSignService.queryCategory();
-		logger.info("查询合同分类完成,合同分类数量:{}",categories.size());
+		logger.info("查询合同分类完成，结果{}", JsonUtils.toJson(categories));
+		
+		
+		//=====================================================
+		//签署链接
+		String shortUrl = standardSignService.shortUrl(contractId);
+		logger.info("获取签署链接完成，结果{}", shortUrl);
+		
+		//=====================================================
+		//发送催签通知
+		standardSignService.sendNotice(contractId);
+		logger.info("发送催签通知完成");
+		
+		
+		//=====================================================
+	    //获取查看合同页面的链接
+		String viewUrl = standardSignService.viewUrl(contractId);
+		logger.info("获取查看合同页面的链接完成，结果{}", viewUrl);
+		
+		//=====================================================
+	    //撤回合同
+		standardSignService.recall(contractId, "测试撤回");
+		logger.info("合同撤回完成");
+		
+		
 	}
 	
 	/**
@@ -127,8 +165,9 @@ public class StandardSignSample {
 		// 用文件创建合同
 		CreateByFileRequest request = new CreateByFileRequest();
 		request.setDocName("file_doc1");
-		request.setSubject("标准签合同");
-		InputStream inputStream = new FileInputStream(new File("D:/sign/standard/demo1.pdf"));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		request.setSubject("标准签合同"+sdf.format(new Date()));
+		InputStream inputStream = new FileInputStream(pdfFile);
 		request.setFile(inputStream);
 		CreateContractResponse response = standardSignService.create(request);
 		safeClose(inputStream);
@@ -142,8 +181,8 @@ public class StandardSignSample {
 		
 //		// 用模板创建合同
 //		Map<String, String> params = new HashMap<String, String>();
-//		params.put("param1", "value1");
-//		params.put("param2", "value2");
+//		params.put("甲方", "王五");
+//		params.put("乙方", "马六");
 //		CreateByTemplateRequest request = new CreateByTemplateRequest();
 //		request.setDocName("template_doc1");
 //		request.setSubject("标准签合同");
@@ -162,13 +201,13 @@ public class StandardSignSample {
 	private static Long addDocument() throws FileNotFoundException {
 
 		// 用文件流添加合同文件
-		AddDocumentByFileRequest request = new AddDocumentByFileRequest();
-		request.setContractId(contractId);
-		request.setTitle("file_doc2");
-		InputStream inputStream = new FileInputStream(new File("D:/sign/standard/demo2.pdf"));
-		request.setFile(inputStream);
-		Long documentId = standardSignService.addDocument(request);
-		safeClose(inputStream);
+//		AddDocumentByFileRequest request = new AddDocumentByFileRequest();
+//		request.setContractId(contractId);
+//		request.setTitle("file_doc2");
+//		InputStream inputStream = new FileInputStream(pdfFile);
+//		request.setFile(inputStream);
+//		Long documentId = standardSignService.addDocument(request);
+//		safeClose(inputStream);
 
 //		// 用HTML文本添加合同文件
 //		AddDocumentByHtmlRequest request = new AddDocumentByHtmlRequest();
@@ -178,15 +217,15 @@ public class StandardSignSample {
 //		Long documentId = standardSignService.addDocument(request);
 
 //		// 用合同模板添加合同文件
-//		Map<String, String> params = new HashMap<String, String>();
-//		params.put("param1", "value1");
-//		params.put("param2", "value2");
-//		AddDocumentByTemplateRequest request = new AddDocumentByTemplateRequest();
-//		request.setTemplateId(templateId);
-//		request.setTemplateParams(params);
-//		request.setContractId(contractId);
-//		request.setTitle("template_doc2");
-//		Long documentId = standardSignService.addDocument(request);
+		Map<String, String> params = new HashMap<>();
+		params.put("甲方", "王五");
+		params.put("乙方", "马六");
+		AddDocumentByTemplateRequest request = new AddDocumentByTemplateRequest();
+		request.setTemplateId(templateId);
+		request.setTemplateParams(params);
+		request.setContractId(contractId);
+		request.setTitle("template_doc2");
+		Long documentId = standardSignService.addDocument(request);
 
 		return documentId;
 	}
@@ -216,17 +255,20 @@ public class StandardSignSample {
 		StandardStamper stamper1 = new StandardStamper();
 		stamper1.setDocumentId(documentId1); // 指定第一份文件的文件ID
 		stamper1.setType(StandardSignType.SEAL);
-		stamper1.setKeyword("乙方公章签署");
+		stamper1.setKeyword("乙方签名"); //使用关键字指定位置
 		StandardStamper stamper2 = new StandardStamper();
 		stamper2.setDocumentId(documentId2); // 指定第二份文件的文件ID
 		stamper2.setType(StandardSignType.SEAL);
-		stamper2.setKeyword("乙方公章签署");
-		List<StandardStamper> stampers = new ArrayList<StandardStamper>();
+//		stamper2.setKeyword("乙方公章签署");//使用关键字指定位置
+		stamper2.setOffsetX(0.2);
+		stamper2.setOffsetY(0.2);
+		stamper2.setPage(1);
+		List<StandardStamper> stampers = new ArrayList<>();
 		stampers.add(stamper1);
 		stampers.add(stamper2);
 		receiver2.setStampers(stampers);
 
-		List<Receiver> receivers = new ArrayList<Receiver>();
+		List<Receiver> receivers = new ArrayList<>();
 		receivers.add(receiver1);
 		receivers.add(receiver2);
 
@@ -244,12 +286,12 @@ public class StandardSignSample {
 	 */
 	private static void signByLegalPerson() {
 
-		List<StandardStamper> stampers = new ArrayList<StandardStamper>();
+		List<StandardStamper> stampers = new ArrayList<>();
 		// 关键字指定法人章位置
 		StandardStamper stamper1 = new StandardStamper();
 		stamper1.setDocumentId(documentId1);
 		stamper1.setType(StandardSignType.LEGAL_PERSON);
-		stamper1.setKeyword("甲方法人签署");
+		stamper1.setKeyword("甲方签名");
 		stampers.add(stamper1);
 		// 坐标直接指定法人章位置
 		StandardStamper stamper2 = new StandardStamper();
@@ -257,7 +299,7 @@ public class StandardSignSample {
 		stamper2.setType(StandardSignType.LEGAL_PERSON);
 		stamper2.setPage(1);
 		stamper2.setOffsetX(0.1);
-		stamper2.setOffsetY(0.1);
+		stamper2.setOffsetY(0.2);
 		stampers.add(stamper2);
 //		// 关键字指定法人签署时间戳位置
 //		StandardStamper stamper3 = new StandardStamper();
@@ -285,18 +327,18 @@ public class StandardSignSample {
 	 * 签署公章：如果合同指定了运营方签署，则调用此接口签署公章；如果指定了运营方签署法人章，则签署公章必须在签署法人章之后进行
 	 */
 	private static void sign() {
-		List<StandardStamper> stampers = new ArrayList<StandardStamper>();
+		List<StandardSignStamper> stampers = new ArrayList<>();
 		// 关键字指定公章位置
-		StandardStamper stamper1 = new StandardStamper();
+		StandardSignStamper stamper1 = new StandardSignStamper();
 		stamper1.setDocumentId(documentId1);
 		stamper1.setType(StandardSignType.SEAL);
-		stamper1.setKeyword("甲方公章签署");
+		stamper1.setKeyword("甲方签名");
 		// 坐标指定时间戳位置
-		StandardStamper stamper2 = new StandardStamper();
+		StandardSignStamper stamper2 = new StandardSignStamper();
 		stamper2.setDocumentId(documentId1);
 		stamper2.setType(StandardSignType.SEAL_TIMESTAMP);
 		stamper2.setPage(1);
-		stamper2.setOffsetX(0.1);
+		stamper2.setOffsetX(0.2);
 		stamper2.setOffsetY(0.2);
 		
 		stampers.add(stamper1);
@@ -313,9 +355,9 @@ public class StandardSignSample {
 	
 	@Bean
 	public SDKClient sdkClient(){
-		String url = "https://openapi.qiyuesuo.me"; // 测试环境
-		String accessKey = "tBYw1vOsA3";
-		String accessSecret = "NOUDnkX0JN96T1VGFttLVCaVWKe1Fh";
+		String url = "https://openapi.qiyuesuo.me"; //测试环境
+		String accessKey = "fH0pNA83NA";
+		String accessSecret = "okE2PhHXiKapiWNnkPhwV4WfBjOL00";
 		return new SDKClient(url,accessKey,accessSecret);
 	}
 	
