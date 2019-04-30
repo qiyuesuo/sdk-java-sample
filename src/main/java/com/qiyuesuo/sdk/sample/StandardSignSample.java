@@ -31,6 +31,7 @@ import com.qiyuesuo.sdk.impl.SealServiceImpl;
 import com.qiyuesuo.sdk.impl.StandardSignServiceImpl;
 import com.qiyuesuo.sdk.signer.AuthLevel;
 import com.qiyuesuo.sdk.standard.AddDocumentByTemplateRequest;
+import com.qiyuesuo.sdk.standard.AttachmentRequest;
 import com.qiyuesuo.sdk.standard.Category;
 import com.qiyuesuo.sdk.standard.CreateByFileRequest;
 import com.qiyuesuo.sdk.standard.CreateContractResponse;
@@ -267,6 +268,15 @@ public class StandardSignSample {
 		stampers.add(stamper2);
 		receiver2.setStampers(stampers);
 
+		List<AttachmentRequest> attachments=new ArrayList<>();
+		AttachmentRequest attachment1=new AttachmentRequest();
+		attachment1.setTitle("附件名称");
+		attachment1.setRequired(true);
+		attachment1.setNeedSign(false);
+		attachments.add(attachment1);
+	
+		receiver2.setAttachments(attachments);
+		
 		List<Receiver> receivers = new ArrayList<>();
 		receivers.add(receiver1);
 		receivers.add(receiver2);
@@ -354,7 +364,7 @@ public class StandardSignSample {
 	
 	@Bean
 	public SDKClient sdkClient(){
-		String url = "https://openapi.qiyuesuo.me"; //测试环境
+		String url = "https://openapi.qiyuesuo.cn"; //测试环境
 		String accessKey = "fH0pNA83NA";
 		String accessSecret = "okE2PhHXiKapiWNnkPhwV4WfBjOL00";
 		return new SDKClient(url,accessKey,accessSecret);

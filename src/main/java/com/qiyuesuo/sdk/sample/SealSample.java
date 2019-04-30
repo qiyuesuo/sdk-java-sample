@@ -74,7 +74,7 @@ public class SealSample {
 	
 	@Bean
 	public SDKClient sdkClient(){
-		String url = "https://openapi.qiyuesuo.me"; //测试环境
+		String url = "https://openapi.qiyuesuo.cn"; //测试环境
 		String accessKey = "fH0pNA83NA";
 		String accessSecret = "okE2PhHXiKapiWNnkPhwV4WfBjOL00";
 		return new SDKClient(url,accessKey,accessSecret);
