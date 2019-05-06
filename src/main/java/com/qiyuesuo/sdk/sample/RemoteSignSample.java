@@ -322,6 +322,7 @@ public class RemoteSignSample {
 	
 	private static void companyMutiSign(Long documentId,RemoteSignService remoteSignService) {
 		Company companySigner = new Company("哈治理测试科技有限公司");
+		companySigner.setRegisterNo("12323432452");
 		MutiCompany companyMutiSign=new MutiCompany(companySigner);
 		
 		List<RemoteStamper> stampers=new ArrayList<>();
@@ -355,6 +356,9 @@ public class RemoteSignSample {
 	
 	private static void personMutiSign(Long documentId,RemoteSignService remoteSignService) {
 		Person personSigner = new Person("签署人");
+		personSigner.setIdcard("311312195709206418");
+		personSigner.setPaperType(PaperType.IDCARD);
+		personSigner.setMobile("13400001111");
 		MutiPerson personMutiSign=new MutiPerson(personSigner);
 		
 		List<RemoteStamper> stampers=new ArrayList<>();
