@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,7 @@ import com.qiyuesuo.sdk.standard.AttachmentRequest;
 import com.qiyuesuo.sdk.standard.Category;
 import com.qiyuesuo.sdk.standard.CreateByFileRequest;
 import com.qiyuesuo.sdk.standard.CreateContractResponse;
+import com.qiyuesuo.sdk.standard.DocumentParam;
 import com.qiyuesuo.sdk.standard.ReceiveType;
 import com.qiyuesuo.sdk.standard.Receiver;
 import com.qiyuesuo.sdk.standard.SendRequest;
@@ -280,12 +282,25 @@ public class StandardSignSample {
 		List<Receiver> receivers = new ArrayList<>();
 		receivers.add(receiver1);
 		receivers.add(receiver2);
+		
+		List<DocumentParam> params=new ArrayList<>();
+		DocumentParam param=new DocumentParam();
+		param.setDocumentId(documentId1);
+		param.setName("参数名称");
+		param.setValue("参数默认值");
+		param.setReceiverNo(1);
+		params.add(param);
 
 		SendRequest request = new SendRequest();
 		request.setContractId(contractId);
 		request.setCategoryId(categoryId); // 为空时默认为“默认合同分类”
 		request.setReceiveType(ReceiveType.SEQ); // 顺序接收
 		request.setReceivers(receivers);
+		request.setDocumentParams(params);
+		
+		Calendar now=Calendar.getInstance();
+		now.add(Calendar.MONTH, 2);
+		request.setExpireTime(now.getTime());
 		// 发起合同
 		standardSignService.send(request);
 	}
@@ -301,6 +316,7 @@ public class StandardSignSample {
 		stamper1.setDocumentId(documentId1);
 		stamper1.setType(StandardSignType.LEGAL_PERSON);
 		stamper1.setKeyword("甲方签名");
+		stamper1.setKeywordIndex(1);
 		stampers.add(stamper1);
 		// 坐标直接指定法人章位置
 		StandardStamper stamper2 = new StandardStamper();
@@ -342,6 +358,7 @@ public class StandardSignSample {
 		stamper1.setDocumentId(documentId1);
 		stamper1.setType(StandardSignType.SEAL);
 		stamper1.setKeyword("甲方签名");
+		stamper1.setKeywordIndex(2);
 		// 坐标指定时间戳位置
 		StandardSignStamper stamper2 = new StandardSignStamper();
 		stamper2.setDocumentId(documentId1);
@@ -365,8 +382,8 @@ public class StandardSignSample {
 	@Bean
 	public SDKClient sdkClient(){
 		String url = "https://openapi.qiyuesuo.cn"; //测试环境
-		String accessKey = "fH0pNA83NA";
-		String accessSecret = "okE2PhHXiKapiWNnkPhwV4WfBjOL00";
+		String accessKey = "替换为您开放平台Access Token";
+		String accessSecret = "替换为您开放平台Access Secret";
 		return new SDKClient(url,accessKey,accessSecret);
 	}
 	

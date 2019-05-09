@@ -66,8 +66,8 @@ public class StorageSample {
 	@Bean
 	public SDKClient sdkClient(){
 		String url = "https://openapi.qiyuesuo.cn"; //测试环境
-		String accessKey = "fH0pNA83NA";
-		String accessSecret = "okE2PhHXiKapiWNnkPhwV4WfBjOL00";
+		String accessKey = "替换为您开放平台Access Token";
+		String accessSecret = "替换为您开放平台Access Secret";
 		return new SDKClient(url,accessKey,accessSecret);
 	}
 	
