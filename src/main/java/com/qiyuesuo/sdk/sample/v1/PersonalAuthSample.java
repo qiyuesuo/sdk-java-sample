@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2017,  上海亘岩网络科技有限公司 All rights reserved All rights reserved.
  */
-package com.qiyuesuo.sdk.sample;
+package com.qiyuesuo.sdk.sample.v1;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
