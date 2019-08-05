@@ -15,8 +15,6 @@ import org.springframework.context.annotation.Bean;
 import com.qiyuesuo.sdk.sample.v1.StandardSignSample;
 import com.qiyuesuo.sdk.v2.SdkClient;
 import com.qiyuesuo.sdk.v2.bean.Action;
-import com.qiyuesuo.sdk.v2.bean.Attachment;
-import com.qiyuesuo.sdk.v2.bean.Category;
 import com.qiyuesuo.sdk.v2.bean.Contract;
 import com.qiyuesuo.sdk.v2.bean.Signatory;
 import com.qiyuesuo.sdk.v2.bean.Stamper;
@@ -40,13 +38,13 @@ import com.qiyuesuo.sdk.v2.response.SdkResponse;
 public class SendByCodeSetting {
 
 	private static final Logger logger = LoggerFactory.getLogger(StandardSignSample.class);
-	private static final String PLATFORM_NAME = "思晨教育";
+	private static final String PLATFORM_NAME = "大头橙橙汁公司";
 
 	@Bean
 	public SdkClient sdkClient() {
 		String url = "https://openapi.qiyuesuo.cn";
-		String accessKey = "更换为您开放平台 App Token";
-		String accessSecret = "更换为您开放平台App Secret";
+		String accessKey = "替换为开放平台申请的App Secret";
+		String accessSecret = "替换为开放平台申请的App Token";
 		return new SdkClient(url, accessKey, accessSecret);
 	}
 
@@ -71,8 +69,6 @@ public class SendByCodeSetting {
 		logger.info("根据模板添加合同文档成功，文档ID：{}", documentId2);
 		send(client, draft.getResult(), documentId1, documentId2);
 		logger.info("合同发起成功");
-		audit(client, contractId);
-		logger.info("合同审批完成");
 		companySealSign(client, contractId, documentId1, documentId2);
 		logger.info("公章签署成功");
 		lpSign(client, contractId, documentId1, documentId2);
@@ -104,16 +100,12 @@ public class SendByCodeSetting {
 		platformSignatory.setTenantName(PLATFORM_NAME);
 		platformSignatory.setSerialNo(1);
 		platformSignatory.setReceiver(new User("17621699044", "MOBILE"));
-		// 合同审批流程
-		Action auditAction = new Action("AUDIT", 1);
-		auditAction.setOperators(Arrays.asList(new User("17621699044", "MOBILE")));
-		platformSignatory.addAction(auditAction);
 		// 合同公章签署流程
-		Action sealAction = new Action("COMPANY", 2);
-		sealAction.setSealId(2585762783565828526L);
+		Action sealAction = new Action("COMPANY", 1);
+		sealAction.setSealId(2490828768980361630L);
 		platformSignatory.addAction(sealAction);
 		// 合同法人章签署流程
-		platformSignatory.addAction(new Action("LP", 3));
+		platformSignatory.addAction(new Action("LP", 2));
 		draftContract.addSignatory(platformSignatory);
 		// 个人签署方
 		Signatory persoanlSignatory = new Signatory();
@@ -121,16 +113,10 @@ public class SendByCodeSetting {
 		persoanlSignatory.setTenantName("邓茜茜");
 		persoanlSignatory.setSerialNo(2);
 		persoanlSignatory.setReceiver(new User("15021504325", "MOBILE"));
-		// 设置上传附件要求
-		Attachment requiredAttachment = new Attachment();
-		requiredAttachment.setTitle("附件-身份证正面照");
-		requiredAttachment.setRequired(true);
-		persoanlSignatory.setAttachments(Arrays.asList(requiredAttachment));
 		draftContract.addSignatory(persoanlSignatory);
 		// 设置合同过期时间
-		draftContract.setExpireTime("2019-07-28 23:59:59");
+		draftContract.setExpireTime("2020-07-28 23:59:59");
 		draftContract.setSend(false); // 不发起合同
-		draftContract.setCategory(new Category(2591853545702699188L));
 
 		String response = null;
 		try {
@@ -187,7 +173,7 @@ public class SendByCodeSetting {
 		List<TemplateParam> templateParams = new ArrayList<TemplateParam>();
 		templateParams.add(new TemplateParam("接收方1", "电子合同"));
 		templateParams.add(new TemplateParam("接收方2", "契约锁"));
-		Long templateId = 2565940497181908993L;
+		Long templateId = 2492236993899110515L;
 		String response = null;
 		try {
 			response = client
