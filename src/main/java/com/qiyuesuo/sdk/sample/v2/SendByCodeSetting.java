@@ -71,8 +71,6 @@ public class SendByCodeSetting {
 		logger.info("合同发起成功");
 		companySealSign(client, contractId, documentId1, documentId2);
 		logger.info("公章签署成功");
-		lpSign(client, contractId, documentId1, documentId2);
-		logger.info("法人章签署成功");
 		/**
 		 * 平台方签署完成，签署方签署可采用
 		 * （1）接收短信的方式登录契约锁云平台进行签署
@@ -104,9 +102,6 @@ public class SendByCodeSetting {
 		Action sealAction = new Action("COMPANY", 1);
 		sealAction.setSealId(2490828768980361630L);
 		platformSignatory.addAction(sealAction);
-		// 合同法人章签署流程
-		platformSignatory.addAction(new Action("LP", 2));
-		draftContract.addSignatory(platformSignatory);
 		// 个人签署方
 		Signatory persoanlSignatory = new Signatory();
 		persoanlSignatory.setTenantType("PERSONAL");
@@ -204,7 +199,6 @@ public class SendByCodeSetting {
 		Long platformSignatoryId = null;
 		Long personalSignatoryId = null;
 		Long companySealActionId = null;
-		Long lpSealActionId = null;
 		for (Signatory signatory : draft.getSignatories()) {
 			// 获取平台方SignatoryId，以及对应的公章签署ActionId和法人章签署ActionId
 			if (signatory.getTenantName().equals(PLATFORM_NAME) && signatory.getTenantType().equals("COMPANY")) {
@@ -212,9 +206,6 @@ public class SendByCodeSetting {
 				for (Action action : signatory.getActions()) {
 					if (action.getType().equals("COMPANY")) {
 						companySealActionId = action.getId();
-					}
-					if (action.getType().equals("LP")) {
-						lpSealActionId = action.getId();
 					}
 				}
 			}
@@ -232,15 +223,6 @@ public class SendByCodeSetting {
 		sealStamper.setOffsetX(0.2);
 		sealStamper.setOffsetY(0.3);
 		sealStamper.setPage(1);
-
-		// 法人章签署位置
-		Stamper lpStamper = new Stamper();
-		lpStamper.setType("LP");
-		lpStamper.setActionId(lpSealActionId);
-		lpStamper.setDocumentId(documentId1);
-		lpStamper.setOffsetX(0.7);
-		lpStamper.setOffsetY(0.1);
-		lpStamper.setPage(1);
 
 		// 公章时间戳签署位置
 		Stamper timeStamper = new Stamper();
@@ -263,7 +245,7 @@ public class SendByCodeSetting {
 		String response = null;
 		try {
 			response = client.service(new ContractSendRequest(draft.getId(),
-					Arrays.asList(sealStamper, lpStamper, timeStamper, personalStamper)));
+					Arrays.asList(sealStamper, timeStamper, personalStamper)));
 		} catch (Exception e) {
 			throw new Exception("发起合同请求服务器失败，失败原因：" + e.getMessage());
 		}

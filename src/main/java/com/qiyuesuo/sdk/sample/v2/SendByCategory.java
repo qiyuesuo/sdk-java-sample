@@ -19,7 +19,6 @@ import com.qiyuesuo.sdk.v2.param.SignParam;
 import com.qiyuesuo.sdk.v2.request.ContractDraftRequest;
 import com.qiyuesuo.sdk.v2.request.ContractPageRequest;
 import com.qiyuesuo.sdk.v2.request.ContractSignCompanyRequest;
-import com.qiyuesuo.sdk.v2.request.ContractSignLpRequest;
 import com.qiyuesuo.sdk.v2.response.ContractPageResult;
 import com.qiyuesuo.sdk.v2.response.SdkResponse;
 
@@ -51,8 +50,6 @@ public class SendByCategory {
 		logger.info("创建合同草稿成功，并发起，合同ID：{}", draft.getResult().getId());
 		companySealSignByCategoryConfig(client, draft.getResult().getId());
 		logger.info("公章签署成功");
-		lpSignByCategoryConfig(client, draft.getResult().getId());
-		logger.info("法人章签署成功");
 		/**
 		 * 平台方签署完成，签署方签署可采用
 		 * （1）接收短信的方式登录契约锁云平台进行签署
@@ -131,31 +128,6 @@ public class SendByCategory {
 		return sdkResponse;
 	}
 
-	/**
-	 * 根据业务分类配置的签署位置 签署法人章
-	 * 若微配置签署位置需要设置签署位置
-	 * 
-	 * @param client
-	 * @param contractId
-	 * @return
-	 * @throws Exception
-	 */
-	private static SdkResponse lpSignByCategoryConfig(SdkClient client, Long contractId) throws Exception {
-		SignParam param = new SignParam();
-		param.setContractId(contractId);
-
-		String response = null;
-		try {
-			response = client.service(new ContractSignLpRequest(param));
-		} catch (Exception e) {
-			throw new Exception("法人章签署请求服务器失败，失败原因：" + e.getMessage());
-		}
-		SdkResponse sdkResponse = JSONUtils.toQysResponse(response, Object.class);
-		if (!sdkResponse.getCode().equals(0)) {
-			throw new Exception("法人章签署失败，失败原因：" + sdkResponse.getMessage());
-		}
-		return sdkResponse;
-	}
 
 	/**
 	 * 生成用户的签署链接
