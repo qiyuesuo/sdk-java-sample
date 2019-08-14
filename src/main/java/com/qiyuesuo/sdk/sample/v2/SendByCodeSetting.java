@@ -102,6 +102,7 @@ public class SendByCodeSetting {
 		Action sealAction = new Action("COMPANY", 1);
 		sealAction.setSealId(2490828768980361630L);
 		platformSignatory.addAction(sealAction);
+		draftContract.addSignatory(platformSignatory);
 		// 个人签署方
 		Signatory persoanlSignatory = new Signatory();
 		persoanlSignatory.setTenantType("PERSONAL");
