@@ -1,12 +1,9 @@
 /**
  * Copyright (C) 2017,  上海亘岩网络科技有限公司 All rights reserved All rights reserved.
  */
-package com.qiyuesuo.sdk.sample.v1;
+package com.qiyuesuo.sdk.sample;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +13,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import com.qiyuesuo.sdk.SDKClient;
-import com.qiyuesuo.sdk.api.StorageService;
-import com.qiyuesuo.sdk.impl.StorageServiceImpl;
+import com.qiyuesuo.sdk.api.TemplateService;
+import com.qiyuesuo.sdk.impl.TemplateServiceImpl;
+import com.qiyuesuo.sdk.template.TemplateInfo;
+import com.qiyuesuo.sdk.utils.JsonUtils;
 
 /**
  * 契约锁 JAVA SDK 模板接口实例代码</br>
@@ -26,18 +25,9 @@ import com.qiyuesuo.sdk.impl.StorageServiceImpl;
  * @author GJ
  */
 @SpringBootApplication
-public class StorageSample {
+public class TemplateSample {
 	
-	private static final Logger logger = LoggerFactory.getLogger(StorageSample.class);
-	
-	private static Long fileId = null; 
-	private static File pdfFile = new File("./NoSign.pdf"); //测试文档
-	private static File outFile = new File("./sign/storage");   //测试输出文档路径
-	static {
-		if(!outFile.exists()) {
-			outFile.mkdirs();
-		}
-	}
+	private static final Logger logger = LoggerFactory.getLogger(TemplateSample.class);
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -45,21 +35,18 @@ public class StorageSample {
 		context.registerShutdownHook();
 		context.start();
 		
-		StorageService storageService = context.getBean(StorageService.class);
+		TemplateService templateService = context.getBean(TemplateService.class);
 		
 		//========================================================================
-		// 存储文件并公证
-		FileInputStream input = new FileInputStream(pdfFile);
-		String contentType = "text/plain";
-		String fileName = "NoSign.pdf";
-		fileId = storageService.upload(input, fileName, contentType, true);
-		logger.info("存储文件并公证完成，结果{}：",fileId);
+		// 查询合同模板
+		List<TemplateInfo> templateInfos = templateService.queryTemplate();
+		logger.info("查询合同模板完成,结果:{}",JsonUtils.toJson(templateInfos));
 
 		//========================================================================
-		// 下载文件
-		OutputStream outputStream = new FileOutputStream(new File(outFile,"download.pdf"));
-		storageService.download(fileId, outputStream);
-		logger.info("下载成功");
+		// 查询合同模板详情
+		TemplateInfo templateInfo = templateService.queryDetail(2475125988735381915L);
+		logger.info("查询合同模板详情完成,结果:{}",JsonUtils.toJson(templateInfo));
+
 	}
 
 	
@@ -72,8 +59,8 @@ public class StorageSample {
 	}
 	
 	@Bean
-	public StorageService storageService(SDKClient sdkClient){
-		return new StorageServiceImpl(sdkClient);
+	public TemplateService templateService(SDKClient sdkClient){
+		return new TemplateServiceImpl(sdkClient);
 	}
 	
 }
