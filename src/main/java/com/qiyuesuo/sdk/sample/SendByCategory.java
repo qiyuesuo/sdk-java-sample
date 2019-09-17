@@ -1,13 +1,8 @@
-package com.qiyuesuo.sdk.sample.v2;
+package com.qiyuesuo.sdk.sample;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 
-import com.qiyuesuo.sdk.sample.v1.StandardSignSample;
 import com.qiyuesuo.sdk.v2.SdkClient;
 import com.qiyuesuo.sdk.v2.bean.Category;
 import com.qiyuesuo.sdk.v2.bean.Contract;
@@ -22,25 +17,16 @@ import com.qiyuesuo.sdk.v2.request.ContractSignCompanyRequest;
 import com.qiyuesuo.sdk.v2.response.ContractPageResult;
 import com.qiyuesuo.sdk.v2.response.SdkResponse;
 
-@SpringBootApplication
 public class SendByCategory {
 
-	private static final Logger logger = LoggerFactory.getLogger(StandardSignSample.class);
+	private static final Logger logger = LoggerFactory.getLogger(SendByCategory.class);
 	private static final String PLATFORM_NAME = "大头橙橙汁公司";
 
-	@Bean
-	public SdkClient sdkClient() {
+	public static void main(String[] args) throws Exception {
 		String url = "https://openapi.qiyuesuo.cn";
 		String accessKey = "更换为您开放平台 App Token";
 		String accessSecret = "更换为您开放平台App Secret";
-		return new SdkClient(url, accessKey, accessSecret);
-	}
-
-	public static void main(String[] args) throws Exception {
-		ConfigurableApplicationContext context = SpringApplication.run(SendByCategory.class, args);
-		context.registerShutdownHook();
-		context.start();
-		SdkClient client = context.getBean(SdkClient.class);
+		SdkClient client = new SdkClient(url, accessKey, accessSecret);
 
 		/**
 		 * 根据业务分类配置进行合同发起，文件、签署流程、签署公章、签署位置均在业务分类中维护

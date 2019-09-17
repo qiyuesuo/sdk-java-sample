@@ -1,4 +1,4 @@
-package com.qiyuesuo.sdk.sample.v2;
+package com.qiyuesuo.sdk.sample;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,11 +8,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
 
-import com.qiyuesuo.sdk.sample.v1.StandardSignSample;
 import com.qiyuesuo.sdk.v2.SdkClient;
 import com.qiyuesuo.sdk.v2.bean.Action;
 import com.qiyuesuo.sdk.v2.bean.Contract;
@@ -37,22 +33,14 @@ import com.qiyuesuo.sdk.v2.response.SdkResponse;
 
 public class SendByCodeSetting {
 
-	private static final Logger logger = LoggerFactory.getLogger(StandardSignSample.class);
+	private static final Logger logger = LoggerFactory.getLogger(SendByCodeSetting.class);
 	private static final String PLATFORM_NAME = "大头橙橙汁公司";
 
-	@Bean
-	public SdkClient sdkClient() {
+	public static void main(String[] args) throws Exception {
 		String url = "https://openapi.qiyuesuo.cn";
 		String accessKey = "替换为开放平台申请的App Secret";
 		String accessSecret = "替换为开放平台申请的App Token";
-		return new SdkClient(url, accessKey, accessSecret);
-	}
-
-	public static void main(String[] args) throws Exception {
-		ConfigurableApplicationContext context = SpringApplication.run(SendByCodeSetting.class, args);
-		context.registerShutdownHook();
-		context.start();
-		SdkClient client = context.getBean(SdkClient.class);
+		SdkClient client = new SdkClient(url, accessKey, accessSecret);
 
 		/**
 		 * 根据代码配置进行合同发起与签署
