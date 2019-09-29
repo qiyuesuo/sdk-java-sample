@@ -22,17 +22,7 @@ Installation
 <dependency>
 	<groupId>com.qiyuesuo.sdk</groupId>
 	<artifactId>sdk-java</artifactId>
-	<version>2.3.0</version>
-</dependency>
-<dependency>
-	<groupId>org.bouncycastle</groupId>
-	<artifactId>bcprov-jdk15on</artifactId>
-	<version>1.49</version>
-</dependency>
-<dependency>
-	<groupId>org.bouncycastle</groupId>
-	<artifactId>bcpkix-jdk15on</artifactId>
-	<version>1.49</version>
+	<version>3.0.0</version>
 </dependency>
 ```
 
@@ -42,7 +32,10 @@ Usage
 #### 签署示例
 发起方通过接口发起合同签署合同，接收方登录契约锁云平台进行签署、或在生成的签署页面签署。
 
-详情请参考： [SendByCodeSetting.java] (https://github.com/qiyuesuo/sdk-java-sample/tree/master/src/main/java/com/qiyuesuo/sdk/sample/SendByCodeSetting.java).
+详情请参考：
+
+ [SendByCodeSetting.java] (https://github.com/qiyuesuo/sdk-java-sample/tree/master/src/main/java/com/qiyuesuo/sdk/sample/SendByCodeSetting.java).
+
  [SendByCategory.java] (https://github.com/qiyuesuo/sdk-java-sample/tree/master/src/main/java/com/qiyuesuo/sdk/sample/SendByCategory.java).
 
 Notes
