@@ -34,9 +34,9 @@ Usage
 
 详情请参考：
 
- [SendByCodeSetting.java] (https://github.com/qiyuesuo/sdk-java-sample/tree/master/src/main/java/com/qiyuesuo/sdk/sample/SendByCodeSetting.java).
+ [SendByCodeSetting.java](https://github.com/qiyuesuo/sdk-java-sample/tree/master/src/main/java/com/qiyuesuo/sdk/sample/SendByCodeSetting.java)
 
- [SendByCategory.java] (https://github.com/qiyuesuo/sdk-java-sample/tree/master/src/main/java/com/qiyuesuo/sdk/sample/SendByCategory.java).
+ [SendByCategory.java](https://github.com/qiyuesuo/sdk-java-sample/tree/master/src/main/java/com/qiyuesuo/sdk/sample/SendByCategory.java)
 
 Notes
 =======
