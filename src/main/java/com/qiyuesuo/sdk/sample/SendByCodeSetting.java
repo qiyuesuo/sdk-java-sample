@@ -38,8 +38,8 @@ public class SendByCodeSetting {
 
 	public static void main(String[] args) throws Exception {
 		String url = "https://openapi.qiyuesuo.cn";
-		String accessKey = "替换为开放平台申请的App Secret";
-		String accessSecret = "替换为开放平台申请的App Token";
+		String accessKey = "替换为开放平台申请的App Token";
+		String accessSecret = "替换为开放平台申请的App Secret";
 		SdkClient client = new SdkClient(url, accessKey, accessSecret);
 
 		/**
