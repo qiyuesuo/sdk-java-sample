@@ -45,7 +45,7 @@ public class ContractBySP {
 		//当前签署人
 		User signUser = new User(receiver.getReceiverContact(),receiver.getContactType());
 		//签署完成跳转的页面地址
-		String callbackPage = "https://www.qiyuesuo.com";
+		String callbackPage = "https://www.baidu.com";
 		SdkResponse<ContractPageResult> pageResult = getSignUrl(client,contractId,signUser,callbackPage);
 		String signURL = pageResult.getResult().getPageUrl();
 		logger.info("获取签署链接成功，URL：{}", signURL);
@@ -62,7 +62,7 @@ public class ContractBySP {
 	 */
 	private static SdkClient initClient() {
 		//token和secret信息来自开放平台控制台
-		String url = "https://openapi.qiyuesuo.cn";
+		String url = "替换为开放平台请求地址";
 		String accessKey = "替换成开放平台申请的token";
 		String accessSecret = "替换成开放平台申请的secret";
 		return new SdkClient(url, accessKey, accessSecret);

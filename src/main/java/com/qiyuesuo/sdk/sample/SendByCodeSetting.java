@@ -37,7 +37,7 @@ public class SendByCodeSetting {
 	private static final String PLATFORM_NAME = "大头橙橙汁公司";
 
 	public static void main(String[] args) throws Exception {
-		String url = "https://openapi.qiyuesuo.cn";
+		String url = "更换为开放平台请求地址";
 		String accessKey = "替换为开放平台申请的App Token";
 		String accessSecret = "替换为开放平台申请的App Secret";
 		SdkClient client = new SdkClient(url, accessKey, accessSecret);
@@ -377,7 +377,6 @@ public class SendByCodeSetting {
 	 */
 	private static SdkResponse<ContractPageResult> gerenateSignUrl(SdkClient client, Long contractId) throws Exception {
 		User signUser = new User("15021504325", "MOBILE");
-		String callbackPage = "https://www.qiyuesuo.com";
 		ContractPageRequest request = new ContractPageRequest(contractId, signUser, callbackPage);
 
 		String response;

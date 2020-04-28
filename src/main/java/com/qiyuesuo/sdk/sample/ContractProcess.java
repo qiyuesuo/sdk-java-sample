@@ -28,9 +28,9 @@ public class ContractProcess {
 	private static final String PLATFORM_NAME = "HZK有限公司";
 	
 	public static void main(String[] args) throws Exception {
-		String url = "https://openapi.qiyuesuo.cn";
-		String accessKey = "ZrVnLs5BdJ";
-		String accessSecret = "ynyUu8GqDpj7M3rhmw5GaEtWxyP3iD";
+		String url = "更换为开放平台请求地址";
+		String accessKey = "更换为您开放平台 App Token";
+		String accessSecret = "更换为您开放平台App Secret";
 		SdkClient client = new SdkClient(url, accessKey, accessSecret);
 
 		//根据业务分类配置进行合同发起，文件、签署流程、签署公章、签署位置均在业务分类中维护	
@@ -142,7 +142,6 @@ public class ContractProcess {
 	private static SdkResponse<ContractPageResult> gerenateSignUrl(SdkClient client, Long contractId) throws Exception {
 		//用户信息需和发起时一致
 		User signUser = new User("15164046497", "MOBILE");
-		String callbackPage = "https://www.qiyuesuo.com";
 		ContractPageRequest request = new ContractPageRequest(contractId, signUser, callbackPage);
 
 		String response;

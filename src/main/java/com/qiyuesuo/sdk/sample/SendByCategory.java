@@ -23,7 +23,7 @@ public class SendByCategory {
 	private static final String PLATFORM_NAME = "大头橙橙汁公司";
 
 	public static void main(String[] args) throws Exception {
-		String url = "https://openapi.qiyuesuo.cn";
+		String url = "更换为开放平台请求地址";
 		String accessKey = "更换为您开放平台 App Token";
 		String accessSecret = "更换为您开放平台App Secret";
 		SdkClient client = new SdkClient(url, accessKey, accessSecret);
