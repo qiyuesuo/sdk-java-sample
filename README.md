@@ -26,6 +26,9 @@ Installation
 </dependency>
 ```
 
+将SDK中jar包放在如下目录中：
+[本地maven仓库目录]/com/qiyuesuo/sdk/sdk-java/3.0.0/sdk-java-3.0.0.jar 。
+
 Usage
 =====
 
