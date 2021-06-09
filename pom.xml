@@ -97,7 +97,7 @@
 		<dependency>
 			<groupId>com.qiyuesuo.sdk</groupId>
 			<artifactId>sdk-java</artifactId>
-			<version>3.0.8</version>
+			<version>3.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

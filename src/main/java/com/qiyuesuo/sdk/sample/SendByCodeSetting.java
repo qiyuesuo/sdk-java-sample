@@ -85,7 +85,7 @@ public class SendByCodeSetting {
 		platformSignatory.setTenantType("COMPANY");
 		platformSignatory.setTenantName(PLATFORM_NAME);
 		platformSignatory.setSerialNo(1);
-		platformSignatory.setReceiver(new User("17621699044", "MOBILE"));
+		platformSignatory.setReceiver(new User("10010001001", "MOBILE"));
 		// 合同公章签署流程
 		Action sealAction = new Action("COMPANY", 1);
 		sealAction.setSealId(2490828768980361630L);
@@ -94,9 +94,9 @@ public class SendByCodeSetting {
 		// 个人签署方
 		Signatory persoanlSignatory = new Signatory();
 		persoanlSignatory.setTenantType("PERSONAL");
-		persoanlSignatory.setTenantName("邓茜茜");
+		persoanlSignatory.setTenantName("个人用户");
 		persoanlSignatory.setSerialNo(2);
-		persoanlSignatory.setReceiver(new User("15021504325", "MOBILE"));
+		persoanlSignatory.setReceiver(new User("10010001002", "MOBILE"));
 		draftContract.addSignatory(persoanlSignatory);
 		// 设置合同过期时间
 		draftContract.setExpireTime("2020-07-28 23:59:59");
@@ -376,8 +376,8 @@ public class SendByCodeSetting {
 	 * @throws Exception
 	 */
 	private static SdkResponse<ContractPageResult> gerenateSignUrl(SdkClient client, Long contractId) throws Exception {
-		User signUser = new User("15021504325", "MOBILE");
-		ContractPageRequest request = new ContractPageRequest(contractId, signUser, callbackPage);
+		User signUser = new User("10010001002", "MOBILE");
+		ContractPageRequest request = new ContractPageRequest(contractId, signUser, null);
 
 		String response;
 		try {

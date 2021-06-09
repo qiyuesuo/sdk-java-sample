@@ -74,21 +74,21 @@ public class ContractProcess {
 		Signatory companySignatory1 = new Signatory();
 		companySignatory1.setTenantName(PLATFORM_NAME);
 		companySignatory1.setTenantType("COMPANY");
-		companySignatory1.setReceiver(new User("15164046497", "MOBILE"));
+		companySignatory1.setReceiver(new User("10010001001", "MOBILE"));
 		companySignatory1.setSerialNo(1);
 		draftContract.addSignatory(companySignatory1);
 		// 公司签署方
 //		Signatory companySignatory2 = new Signatory();
 //		companySignatory2.setTenantName(PLATFORM_NAME);
 //		companySignatory2.setTenantType("COMPANY");
-//		companySignatory2.setReceiver(new User("15164046497", "MOBILE"));
+//		companySignatory2.setReceiver(new User("10010001001", "MOBILE"));
 //		companySignatory2.setSerialNo(2);
 //		draftContract.addSignatory(companySignatory2);
 		// 个人签署方
 		Signatory personalSignatory = new Signatory();
 		personalSignatory.setTenantType("PERSONAL");
-		personalSignatory.setReceiver(new User("15164046497", "MOBILE"));
-		personalSignatory.setTenantName("胡震坤1号");
+		personalSignatory.setReceiver(new User("10010001002", "MOBILE"));
+		personalSignatory.setTenantName("个人用户");
 		personalSignatory.setSerialNo(3);
 		draftContract.addSignatory(personalSignatory);
 		
@@ -141,8 +141,8 @@ public class ContractProcess {
 	 */
 	private static SdkResponse<ContractPageResult> gerenateSignUrl(SdkClient client, Long contractId) throws Exception {
 		//用户信息需和发起时一致
-		User signUser = new User("15164046497", "MOBILE");
-		ContractPageRequest request = new ContractPageRequest(contractId, signUser, callbackPage);
+		User signUser = new User("10010001001", "MOBILE");
+		ContractPageRequest request = new ContractPageRequest(contractId, signUser, null);
 
 		String response;
 		try {

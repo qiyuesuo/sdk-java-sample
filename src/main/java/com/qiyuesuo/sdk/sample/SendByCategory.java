@@ -64,14 +64,14 @@ public class SendByCategory {
 		Signatory companySignatory = new Signatory();
 		companySignatory.setTenantName(PLATFORM_NAME);
 		companySignatory.setTenantType("COMPANY");
-		companySignatory.setReceiver(new User("17621699044", "MOBILE"));
+		companySignatory.setReceiver(new User("10010001001", "MOBILE"));
 		companySignatory.setSerialNo(1);
 		draftContract.addSignatory(companySignatory);
 		// 个人签署方
 		Signatory personalSignatory = new Signatory();
 		personalSignatory.setTenantType("PERSONAL");
-		personalSignatory.setReceiver(new User("15021504325", "MOBILE"));
-		personalSignatory.setTenantName("邓茜茜");
+		personalSignatory.setReceiver(new User("10010001002", "MOBILE"));
+		personalSignatory.setTenantName("个人用户");
 		draftContract.addSignatory(personalSignatory);
 		draftContract.setSend(true); // 创建合同草稿并发起合同
 
@@ -124,7 +124,7 @@ public class SendByCategory {
 	 * @throws Exception
 	 */
 	private static SdkResponse<ContractPageResult> gerenateSignUrl(SdkClient client, Long contractId) throws Exception {
-		User signUser = new User("15021504325", "MOBILE");
+		User signUser = new User("10010001002", "MOBILE");
 		String callbackPage = "https://www.qiyuesuo.com";
 		ContractPageRequest request = new ContractPageRequest(contractId, signUser, callbackPage);
 
